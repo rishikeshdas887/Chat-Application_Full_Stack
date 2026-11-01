@@ -1,0 +1,2 @@
+CREATE INDEX idx_practice_messages_sender
+ON public.sql_practice_messages(sender_id);

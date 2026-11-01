@@ -1,5 +1,9 @@
 package com.rishikesh.chat.repository;
 
-public class Userrepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.rishikesh.chat.entity.User;
+
+public interface UserRepository extends JpaRepository<User, Long> {
 
 }
