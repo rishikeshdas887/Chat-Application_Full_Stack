@@ -14,16 +14,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService) {  //constructor dependency injection 
         this.userService = userService;
 
     }
 
-    @PostMapping("/api/users")
-    public String registerUser(@RequestBody User user) {
+    @PostMapping("/api/users") //HTTP POST request receive karega
+    public String registerUser(@RequestBody User user) { //Frontend se anne wale JSON Ko java object mein convert karega
 
-        User savedUser = userService.saveUser(user);
+        User savedUser = userService.saveUser(user);//Service ko user ssave krne k liye call kiya 
         return "User registered successfully. ID:" + savedUser.getId();
     }
 
 }
+
+// FRONTEND JSON --> User Controller --> User Service --> User Repository --> PostgreSQL
