@@ -23,37 +23,37 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RequestMapping("/api/conversations")
 public class ConversationController {
-    private final ConversationService conversationService;
+  private final ConversationService conversationService;
 
-    public ConversationController(ConversationService conversationService) {
-        this.conversationService = conversationService;
-    } 
+  public ConversationController(ConversationService conversationService) {
+    this.conversationService = conversationService;
+  }
 
-    @PostMapping 
-    public Conversation createConversation(@RequestBody Conversation conversation) {
-        return conversationService.createConversation(conversation);
-    
-    }
+  @PostMapping
+  public Conversation createConversation(@RequestBody Conversation conversation) {
+    return conversationService.createConversation(conversation);
+
+  }
+
   @GetMapping("{conversationId}")
-  public Conversation getConversation(@RequestBody Conversation conversationId){
+  public Conversation getConversation(@PathVariable Long conversationId) {
     return conversationService.getConversation(conversationId);
   }
 
-  @PutMapping("{conversationId}")  //conversation update krne ka method 
-  public Conversation putConversation( @PathVariable Long conversationId
-    @RequestBody Conversation conversation){
-   return conversationService.updateConversation(conversationId,conversation);
+  @PutMapping("{conversationId}") // conversation update krne ka method
+  public Conversation putConversation(@PathVariable Long conversationId,
+      @RequestBody Conversation conversation) {
+    return conversationService.updateConversation(conversationId, conversation);
 
-   //@PathVariable kaunsi conversation update krni h 
-   //@RequestBody updated details kya hain
-    
-  }
-  @DeleteMapping("{conversationId}")  //conversation delete krne ka method 
-  public Conversation putConversation(@RequestBody Conversation conversation){ //long assuming entity id is long 
-   return conversationService.deleteConversation(conversationId);
-    
+    // @PathVariable kaunsi conversation update krni h
+    // @RequestBody updated details kya hain
+
   }
 
+  @DeleteMapping("{conversationId}") // conversation delete krne ka method
+  public void deleteConversation(@PathVariable Long conversationId) { // long assuming entity id is long
+    conversationService.deleteConversation(conversationId);
 
+  }
 
 }
