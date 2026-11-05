@@ -1,13 +1,10 @@
 package com.rishikesh.chat.service;
 
 //Importing the user entity
-import com.rishikesh.chat.entity.Conversation;
-
-//import Userepository
-import com.rishikesh.chat.repository.ConversationRepository;
-
-//marks this class as a service 
 import org.springframework.stereotype.Service;
+
+import com.rishikesh.chat.entity.Conversation;
+import com.rishikesh.chat.repository.ConversationRepository;
 
 @Service // class ko service component ke roop mein manage karna hai
 public class ConversationService {

@@ -1,19 +1,15 @@
 //Handles message-related REST APIs
 package com.rishikesh.chat.controller;
 
-import com.rishikesh.chat.entity.Conversation;
-import com.rishikesh.chat.entity.Message;
-
-import com.rishikesh.chat.service.MessageService;
-
-import org.springframework.web.bind.annotation.RestController; //http recieves request and gives responses
-import org.springframework.web.bind.annotation.RequestMapping; //conversation ke messages ka common URL
-
-//send message api 
-
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping; //http recieves request and gives responses
+import org.springframework.web.bind.annotation.RequestParam; //conversation ke messages ka common URL
+import org.springframework.web.bind.annotation.RestController;
+
+import com.rishikesh.chat.entity.Message;
+import com.rishikesh.chat.service.MessageService;
 
 @RequestMapping("/api/conversations/{conversationId}/messages")
 @RestController
@@ -27,7 +23,8 @@ public class MessageController {
     @PostMapping
     public Message sendMessage(
             @PathVariable("conversationId") Long conversationId,
+            @RequestParam("userId") Long userId,
             @RequestBody Message message) {
-        return messageService.sendMessage(conversationId, message);
+        return messageService.sendMessage(conversationId, message, userId);
     }
 }
