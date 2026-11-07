@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository; // connecting service-> DB
+    private String phoneNumber;
 
     // creating UserService with this repo -> DB
     public UserService(UserRepository userRepository) {
@@ -24,5 +25,22 @@ public class UserService {
         return userRepository.save(user);
     }
     // Overall Logic--> UserService -> UserRepository, PostgreSQL
+
+    // get user by id
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Can't find the user"));
+    }
+
+    // get user by phone number
+    public User getUserByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new RuntimeException("User not found "));
+
+    }
+
+    public updateUserProfile(Long userId, User updatedUser){
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setUsername(newUsername);
+        return userRepository.save(user);
+    }
 
 }
