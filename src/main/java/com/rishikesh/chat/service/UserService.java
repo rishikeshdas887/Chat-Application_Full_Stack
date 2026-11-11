@@ -8,16 +8,19 @@ import com.rishikesh.chat.repository.UserRepository;
 
 //marks this class as a service 
 import org.springframework.stereotype.Service;
+import com.rishikesh.chat.dto.RegisterUserRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service // telling spring that this class is containing a business logic
+
 public class UserService {
 
     private final UserRepository userRepository; // connecting service-> DB
-    private String phoneNumber;
+    private final PasswordEncoder passwordEncoder;
 
-    // creating UserService with this repo -> DB
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // takes a user ->sends to repo->repo sends to DB
@@ -37,10 +40,14 @@ public class UserService {
 
     }
 
-    public updateUserProfile(Long userId, User updatedUser){
+    public User updateUserProfile(Long userId, String updatedUsername) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        user.setUsername(newUsername);
+        user.setUsername(updatedUsername);
         return userRepository.save(user);
+
     }
+
+    // abb register user method implement karna hai
+    public User registerUser
 
 }
