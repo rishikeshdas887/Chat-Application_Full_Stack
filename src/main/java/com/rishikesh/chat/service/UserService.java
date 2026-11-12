@@ -48,6 +48,26 @@ public class UserService {
     }
 
     // abb register user method implement karna hai
-    public User registerUser
+    public User registerUser(RegisterUserRequest request) {
+
+        // 1.check duplicate phone number
+        if (userRepository.findByPhoneNumber(request.getPhoneNumber()).isPresent()) {
+            throw new RuntimeException("Phone number already registered");
+        }
+
+        // 2.create user object
+        User user = new User();
+
+        // set user details
+
+        user.setUsername(request.getUsername());
+        user.setPhoneNumber(request.getPhoneNumber());
+
+        // Hash Password
+        user.setHashedPassword(passwordEncoder.encode(request.getPassword()));
+
+        // Save user in database
+        return userRepository.save(user);
+    }
 
 }

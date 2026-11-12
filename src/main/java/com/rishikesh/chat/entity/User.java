@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "users") // java class corresponds to table in Db named users
@@ -25,6 +26,9 @@ public class User {
     private String email;
     private String hashedPassword;
     private LocalDateTime createdAt;
+
+    @Column(name = "phone_number", unique = true) // duplicaiton prevention
+    private String phoneNumber;
 
     private UserStatus status;
 
@@ -53,6 +57,10 @@ public class User {
         return status;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     // setters -------------------->
 
     public void setUsername(String username) {
@@ -75,4 +83,7 @@ public class User {
         this.status = status;
     }
 
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 }
