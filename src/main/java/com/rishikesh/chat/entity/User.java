@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 @Entity
 @Table(name = "users") // java class corresponds to table in Db named users
@@ -30,6 +32,7 @@ public class User {
     @Column(name = "phone_number", unique = true) // duplicaiton prevention
     private String phoneNumber;
 
+    @Enumerated(EnumType.STRING)
     private UserStatus status;
 
     public Long getId() {
