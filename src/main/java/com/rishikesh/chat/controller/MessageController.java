@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rishikesh.chat.entity.Message;
 import com.rishikesh.chat.service.MessageService;
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RequestMapping("/api/conversations/{conversationId}/messages")
 @RestController
@@ -27,4 +29,11 @@ public class MessageController {
             @RequestBody Message message) {
         return messageService.sendMessage(conversationId, message, userId);
     }
+
+    @GetMapping("")
+    public List<Message> getMessages(
+            @PathVariable("conversationId") Long conversationId) {
+        return messageService.getMessages(conversationId);
+    }
+
 }

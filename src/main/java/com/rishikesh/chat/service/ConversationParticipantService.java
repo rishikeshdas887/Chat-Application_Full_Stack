@@ -69,7 +69,7 @@ public class ConversationParticipantService {
     public boolean isParticipant(Long conversationId, Long userId) {
 
         // check if a user is particularly a particpant of a convo or not
-        Conversation conversation = conversationRepository.findById(conversationId)
+        conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found "));
 
         return participantRepository.existsByConversation_IdAndUser_Id(conversationId, userId);
@@ -91,7 +91,7 @@ public class ConversationParticipantService {
                 .orElseThrow(() -> new RuntimeException("Participant not found "));
 
         // remove participant from convo
-        particpantRepository.delete(participant);
+        participantRepository.delete(participant);
 
     }
 }

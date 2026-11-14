@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 import com.rishikesh.chat.dto.UpdateUserRequest;
+import com.rishikesh.chat.dto.RegisterUserRequest;
+import jakarta.validation.Valid;
 
 @RestController // tells spring that this class handles HTTP request and return responses
 
@@ -26,11 +28,12 @@ public class UserController {
     }
 
     @PostMapping("/api/users") // HTTP POST request receive karega
-    public String registerUser(@RequestBody User user) { // Frontend se anne wale JSON Ko java object mein convert
-                                                         // karega
+    public UserResponse registerUser(@RequestBody @Valid RegisterUserRequest request) { // Frontend se anne wale JSON Ko
+                                                                                        // java object mein convert
+        // karega
 
-        User savedUser = userService.saveUser(user);// Service ko user ssave krne k liye call kiya
-        return "User registered successfully. ID:" + savedUser.getId();
+        User savedUser = userService.registerUser(request);// Service ko user ssave krne k liye call kiya
+        return new UserResponse(savedUser);
     }
 
     @GetMapping("/api/users/{userId}") // HTTP GET request receive karega
@@ -40,22 +43,22 @@ public class UserController {
     }
 
     @GetMapping("/api/users/phone")
-    public UserResponse getUserByPhoneNumber(@RequestParam ("phoneNumber")String phoneNumber){
+    public UserResponse getUserByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber) {
         User user = userService.getUserByPhoneNumber(phoneNumber);
         return new UserResponse(user);
-      
+
     }
 
     @PutMapping("/api/users/{userId}")
-    public UserResponse updateUserProfile ("userId")Long userId,
-     @RequestBody UpdateUserRequest request) {
+    public UserResponse updateUserProfile(@PathVariable("userId") Long userId,
+            @RequestBody UpdateUserRequest request) {
 
-        User updateUser=userService.updateUserProfile(userId, request.getUsername());
+        User updateUser = userService.updateUserProfile(userId, request.getUsername());
 
         return new UserResponse(updateUser);
     }
 
-    }
+}
 
 // FRONTEND JSON --> User Controller --> User Service --> User Repository -->
 // PostgreSQL
