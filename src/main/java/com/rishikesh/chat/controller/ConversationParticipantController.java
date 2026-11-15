@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rishikesh.chat.entity.ConversationParticipant;
 import com.rishikesh.chat.service.ConversationParticipantService;
+import com.rishikesh.chat.dto.ParticipantResponse;
 
 @RestController
 @RequestMapping("/api/conversations/{conversationId}/participants")
@@ -25,19 +26,25 @@ public class ConversationParticipantController {
 
     // add participant
     @PostMapping
-    public ConversationParticipant addParticipant(
+    public ParticipantResponse addParticipant(
             @PathVariable Long conversationId,
             @RequestParam Long userId) {
-        return participantService.addParticipant(conversationId, userId);
+
+        ConversationParticipant savedParticipant = participantService.addParticipant(conversationId, userId);
+
+        return new ParticipantResponse(savedParticipant);
     }
 
     // get all participants of a convo
 
     @GetMapping
-    public List<ConversationParticipant> getParticipants(
+    public List<ParticipantResponse> getParticipants(
             @PathVariable // extract convo id and user id from url
             Long conversationId) {
-        return participantService.getParticipants(conversationId);
+        return participantService.getParticipants(conversationId)
+                .stream()
+                .map(ParticipantResponse::new)
+                .toList();
     }
 
     // check membership of a user in convo

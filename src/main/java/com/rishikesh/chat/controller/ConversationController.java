@@ -1,59 +1,65 @@
-//Creates and retrieves conversations 
-
-// Logic : Chat between two that is private  it receives request and COnversationService ko forward krega 
-
-//controller is business  logic ko isi naam ka service ko forward krega
-
 package com.rishikesh.chat.controller;
 
 import com.rishikesh.chat.entity.Conversation;
+import com.rishikesh.chat.dto.ConversationResponse;
 import com.rishikesh.chat.service.ConversationService;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import com.rishikesh.chat.dto.CreateConversationRequest;
+import jakarta.validation.Valid;
 
 @RestController
-// tells spring that this class handles HTTP request and return responses
-
 @RequestMapping("/api/conversations")
 public class ConversationController {
+
   private final ConversationService conversationService;
 
   public ConversationController(ConversationService conversationService) {
     this.conversationService = conversationService;
   }
 
+  // Create conversation
   @PostMapping
-  public Conversation createConversation(@RequestBody Conversation conversation) {
-    return conversationService.createConversation(conversation);
+  public ConversationResponse createConversation(
+      @Valid @RequestBody CreateConversationRequest request) {
 
+    Conversation conversation = new Conversation();
+
+    conversation.setName(request.getName());
+    conversation.setType(request.getType());
+
+    Conversation savedConversation = conversationService.createConversation(conversation);
+
+    return new ConversationResponse(savedConversation);
   }
 
-  @GetMapping("{conversationId}")
-  public Conversation getConversation(@PathVariable Long conversationId) {
-    return conversationService.getConversation(conversationId);
+  // Get conversation by ID
+  @GetMapping("/{conversationId}")
+  public ConversationResponse getConversation(
+      @PathVariable Long conversationId) {
+
+    Conversation conversation = conversationService.getConversation(conversationId);
+
+    return new ConversationResponse(conversation);
   }
 
-  @PutMapping("{conversationId}") // conversation update krne ka method
-  public Conversation putConversation(@PathVariable Long conversationId,
+  // Update conversation
+  @PutMapping("/{conversationId}")
+  public ConversationResponse updateConversation(
+      @PathVariable Long conversationId,
       @RequestBody Conversation conversation) {
-    return conversationService.updateConversation(conversationId, conversation);
 
-    // @PathVariable kaunsi conversation update krni h
-    // @RequestBody updated details kya hain
+    Conversation updatedConversation = conversationService.updateConversation(
+        conversationId, conversation);
 
+    return new ConversationResponse(updatedConversation);
   }
 
-  @DeleteMapping("{conversationId}") // conversation delete krne ka method
-  public void deleteConversation(@PathVariable Long conversationId) { // long assuming entity id is long
+  // Delete conversation
+  @DeleteMapping("/{conversationId}")
+  public void deleteConversation(
+      @PathVariable Long conversationId) {
+
     conversationService.deleteConversation(conversationId);
-
   }
-
 }
