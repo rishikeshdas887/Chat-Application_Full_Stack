@@ -29,4 +29,5 @@ public class SendMessageRequest {
     public void setType(MessageType type) {
         this.type = type;
     }
+    
 }

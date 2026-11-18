@@ -5,6 +5,6 @@ public class UpdateUserRequest {
     private String username;
 
     public String getUsername() {
-
+        return username;
     }
 }

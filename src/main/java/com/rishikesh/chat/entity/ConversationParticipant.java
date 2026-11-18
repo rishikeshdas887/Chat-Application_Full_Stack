@@ -22,7 +22,7 @@ import jakarta.persistence.UniqueConstraint; //to prevent a user to add in a cha
 @Table(name = "conversation_participants",
 
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = { "user_id ", "conversation_id" }) // to prevent duplication of
+                @UniqueConstraint(columnNames = { "user_id", "conversation_id" }) // to prevent duplication of
                                                                                    // memebrship of a user in a
                                                                                    // particpant
         })

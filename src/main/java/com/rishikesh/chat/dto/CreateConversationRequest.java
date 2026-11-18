@@ -11,4 +11,20 @@ public class CreateConversationRequest {
     private ConversationType type;
     @Size(max = 100, message = "Conversation name cannot exceed 100 characters")
     private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public ConversationType getType() {
+        return type;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(ConversationType type) {
+        this.type = type;
+    }
 }

@@ -1,11 +1,20 @@
 package com.rishikesh.chat.controller;
 
-import com.rishikesh.chat.entity.Conversation;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.rishikesh.chat.dto.ConversationResponse;
+import com.rishikesh.chat.dto.CreateConversationRequest;
+import com.rishikesh.chat.dto.UpdateConversationRequest;
+import com.rishikesh.chat.entity.Conversation;
 import com.rishikesh.chat.service.ConversationService;
 
-import org.springframework.web.bind.annotation.*;
-import com.rishikesh.chat.dto.CreateConversationRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -47,7 +56,11 @@ public class ConversationController {
   @PutMapping("/{conversationId}")
   public ConversationResponse updateConversation(
       @PathVariable Long conversationId,
-      @RequestBody Conversation conversation) {
+      @Valid @RequestBody UpdateConversationRequest request) {
+    Conversation conversation = new Conversation();
+
+    conversation.setName(request.getName());
+    conversation.setType(request.getType());
 
     Conversation updatedConversation = conversationService.updateConversation(
         conversationId, conversation);

@@ -10,20 +10,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rishikesh.chat.dto.ParticipantResponse;
 import com.rishikesh.chat.entity.ConversationParticipant;
 import com.rishikesh.chat.service.ConversationParticipantService;
-import com.rishikesh.chat.dto.ParticipantResponse;
 
 @RestController
 @RequestMapping("/api/conversations/{conversationId}/participants")
 
+
 public class ConversationParticipantController {
+
     private final ConversationParticipantService participantService;
 
     public ConversationParticipantController(ConversationParticipantService particpantService) {
         this.participantService = particpantService;
     }
-
+    
     // add participant
     @PostMapping
     public ParticipantResponse addParticipant(
@@ -34,6 +36,7 @@ public class ConversationParticipantController {
 
         return new ParticipantResponse(savedParticipant);
     }
+    
 
     // get all participants of a convo
 
@@ -63,5 +66,8 @@ public class ConversationParticipantController {
             @PathVariable Long userId) {
         participantService.removeParticipant(conversationId, userId);
     }
+    
+
+    
 
 }

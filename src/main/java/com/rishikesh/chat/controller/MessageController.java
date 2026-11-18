@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam; //conversation ke m
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rishikesh.chat.entity.Message;
+import com.rishikesh.chat.dto.SendMessageRequest;
+import jakarta.validation.Valid;
 import com.rishikesh.chat.service.MessageService;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
+import com.rishikesh.chat.dto.MessageResponse;
 
 @RequestMapping("/api/conversations/{conversationId}/messages")
 @RestController
@@ -22,18 +25,28 @@ public class MessageController {
         this.messageService = messageService;
     }
 
+    
     @PostMapping
-    public Message sendMessage(
-            @PathVariable("conversationId") Long conversationId,
-            @RequestParam("userId") Long userId,
-            @RequestBody Message message) {
-        return messageService.sendMessage(conversationId, message, userId);
-    }
+    public MessageResponse sendMessage(
+        @PathVariable("conversationId")Long conversationId,
+        @RequestParam("userId")Long userId,
+        @Valid @RequestBody SendMessageRequest request) {
+            Message message =new Message();
+            message.setContent(request.getContent());
+            message.setType(request.getType());
+        Message savedMessage =
+            messageService.sendMessage(conversationId, message, userId);
 
-    @GetMapping("")
-    public List<Message> getMessages(
-            @PathVariable("conversationId") Long conversationId) {
-        return messageService.getMessages(conversationId);
+    return new MessageResponse(savedMessage);
     }
+    @GetMapping
+public List<MessageResponse> getMessages(
+        @PathVariable("conversationId") Long conversationId) {
+
+    return messageService.getMessages(conversationId)
+            .stream()
+            .map(MessageResponse::new)
+            .toList();
+}
 
 }
