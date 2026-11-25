@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const PhoneNumberForm = ({ onRequestOtp, onBack, isLoading, error }) => {
+const PhoneNumberForm = ({ onRequestOtp, onDirectEnter, onBack, isLoading, error }) => {
   const [phoneNumber, setPhoneNumber] = useState('+91');
   const [validationError, setValidationError] = useState('');
 
@@ -164,6 +164,60 @@ const PhoneNumberForm = ({ onRequestOtp, onBack, isLoading, error }) => {
           ) : (
             'Continue to Authenticator'
           )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            const clean = normalizePhone(phoneNumber);
+            if (!clean || clean === '+91') {
+              setValidationError('Please enter your mobile phone number.');
+              return;
+            }
+            let targetAccount = null;
+            try {
+              const registered = JSON.parse(localStorage.getItem('syncpulse_registered_accounts') || '[]');
+              targetAccount = registered.find((u) => u.phoneNumber === clean);
+            } catch {}
+            if (!targetAccount) {
+              const digits = clean.replace(/\D/g, '');
+              const uname = clean.endsWith('6297799544') ? 'Rishikesh' : `User_${digits.slice(-4)}`;
+              targetAccount = {
+                username: uname,
+                phoneNumber: clean,
+                userId: Math.floor(1000 + Math.random() * 9000),
+              };
+            }
+            onDirectEnter?.(targetAccount);
+          }}
+          disabled={isLoading}
+          style={{
+            width: '100%',
+            padding: '11px 16px',
+            backgroundColor: 'rgba(16, 185, 129, 0.12)',
+            color: '#34d399',
+            border: '1px solid rgba(16, 185, 129, 0.35)',
+            borderRadius: '10px',
+            fontSize: '14px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.22)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.12)';
+          }}
+        >
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          Enter Chat Directly with this Number
         </button>
 
         <button

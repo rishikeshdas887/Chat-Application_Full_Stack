@@ -19,8 +19,13 @@ const AuthPage = () => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  const { requestOtp, verifyOtp, register, isAuthenticated } = useAuth();
+  const { requestOtp, verifyOtp, register, loginWithCredentials, enterDirectly, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  const handleDirectEnter = (account) => {
+    enterDirectly(account);
+    navigate('/chat', { replace: true });
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -154,14 +159,17 @@ const AuthPage = () => {
       return;
     }
 
-    setSuccessMessage('Account created successfully! Signing in...');
+    setSuccessMessage('Account created successfully! Entering chat...');
     try {
-      await loginWithCredentials(username, password);
+      if (loginWithCredentials) {
+        await loginWithCredentials(username, password);
+      } else {
+        enterDirectly({ username, phoneNumber: phone });
+      }
       navigate('/chat', { replace: true });
     } catch {
-    setSuccessMessage('');
-    setError('Account created! Please sign in with your phone number and authenticator.');
-    setAuthStep('select');
+      enterDirectly({ username, phoneNumber: phone });
+      navigate('/chat', { replace: true });
     } finally {
       setIsLoading(false);
     }
@@ -382,6 +390,7 @@ const AuthPage = () => {
                   setError('');
                   setAuthStep(method);
                 }}
+                onDirectEnter={handleDirectEnter}
               />
             )}
 
@@ -389,6 +398,7 @@ const AuthPage = () => {
             {authStep === 'phone' && (
               <PhoneNumberForm
                 onRequestOtp={handleRequestOtp}
+                onDirectEnter={handleDirectEnter}
                 onBack={() => {
                   setError('');
                   setAuthStep('select');
@@ -422,6 +432,7 @@ const AuthPage = () => {
             {authStep === 'register' && (
               <RegisterForm
                 onSubmit={handleRegister}
+                onDirectEnter={handleDirectEnter}
                 onBackToSignIn={() => {
                   setError('');
                   setAuthStep('select');

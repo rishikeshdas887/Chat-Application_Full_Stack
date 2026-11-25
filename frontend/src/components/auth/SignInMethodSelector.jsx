@@ -1,6 +1,15 @@
 import React from 'react';
 
-const SignInMethodSelector = ({ onSelectMethod }) => {
+const SignInMethodSelector = ({ onSelectMethod, onDirectEnter }) => {
+  const savedUser = React.useMemo(() => {
+    try {
+      const active = JSON.parse(localStorage.getItem('chatapp_user') || 'null');
+      if (active?.username) return active;
+      const registered = JSON.parse(localStorage.getItem('syncpulse_registered_accounts') || '[]');
+      if (Array.isArray(registered) && registered.length > 0) return registered[0];
+    } catch {}
+    return { username: 'Rishikesh', phoneNumber: '+916297799544' };
+  }, []);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
@@ -30,6 +39,91 @@ const SignInMethodSelector = ({ onSelectMethod }) => {
 
       {/* Auth Options */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        {/* OPTION 0: 1-Click Direct Chat Access */}
+        <button
+          type="button"
+          onClick={() => onDirectEnter?.(savedUser)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            padding: '16px 18px',
+            backgroundColor: 'rgba(99, 102, 241, 0.16)',
+            border: '1.5px solid rgba(99, 102, 241, 0.45)',
+            borderRadius: '14px',
+            textAlign: 'left',
+            cursor: 'pointer',
+            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            color: '#ffffff',
+            outline: 'none',
+            width: '100%',
+            boxShadow: '0 8px 24px -4px rgba(79, 70, 229, 0.35)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(99, 102, 241, 0.26)';
+            e.currentTarget.style.borderColor = '#818cf8';
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 12px 28px -4px rgba(99, 102, 241, 0.45)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(99, 102, 241, 0.16)';
+            e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.45)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 8px 24px -4px rgba(79, 70, 229, 0.35)';
+          }}
+        >
+          {/* Direct Rocket Icon */}
+          <div
+            style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '12px',
+              backgroundColor: '#4f46e5',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '4px',
+              }}
+            >
+              <span style={{ fontSize: '15px', fontWeight: 700, color: '#f8fafc' }}>
+                {savedUser?.username ? `Enter as ${savedUser.username}` : 'Enter Chat Directly'}
+              </span>
+              <span
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  padding: '2px 8px',
+                  borderRadius: '999px',
+                  backgroundColor: 'rgba(99, 102, 241, 0.35)',
+                  color: '#c7d2fe',
+                }}
+              >
+                1-Click Direct
+              </span>
+            </div>
+            <p style={{ margin: 0, fontSize: '13px', color: '#cbd5e1', lineHeight: 1.4 }}>
+              {savedUser?.phoneNumber
+                ? `Continue with ${savedUser.phoneNumber} • Instant entry, no codes needed`
+                : 'Jump straight into the chat application instantly.'}
+            </p>
+          </div>
+        </button>
+
         {/* OPTION A: Continue with Phone & Authenticator */}
         <button
           type="button"

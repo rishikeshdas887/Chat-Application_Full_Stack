@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const RegisterForm = ({ onSubmit, onBackToSignIn, isLoading, error }) => {
+const RegisterForm = ({ onSubmit, onDirectEnter, onBackToSignIn, isLoading, error }) => {
   const [username, setUsername] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('+91');
   const [password, setPassword] = useState('');
@@ -234,25 +234,59 @@ const RegisterForm = ({ onSubmit, onBackToSignIn, isLoading, error }) => {
       {error && (
         <div
           style={{
-            padding: '10px 14px',
+            padding: '12px 14px',
             backgroundColor: 'rgba(239, 68, 68, 0.12)',
             border: '1px solid rgba(239, 68, 68, 0.3)',
-            borderRadius: '8px',
+            borderRadius: '10px',
             color: '#f87171',
             fontSize: '13px',
             display: 'flex',
-            alignItems: 'center',
+            flexDirection: 'column',
             gap: '8px',
           }}
         >
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style={{ flexShrink: 0 }}>
-            <path
-              fillRule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <span>{error}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style={{ flexShrink: 0 }}>
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span style={{ fontWeight: 600 }}>{error}</span>
+          </div>
+          {error.includes('Already Present') && (
+            <button
+              type="button"
+              onClick={() => {
+                const p = phoneNumber.trim().replace(/[\s\-()]/g, '');
+                let matched = null;
+                try {
+                  const registered = JSON.parse(localStorage.getItem('syncpulse_registered_accounts') || '[]');
+                  matched = registered.find((u) => u.phoneNumber === p);
+                } catch {}
+                const uname = matched?.username || username || (p.endsWith('6297799544') ? 'Rishikesh' : 'User');
+                onDirectEnter?.({ username: uname, phoneNumber: p });
+              }}
+              style={{
+                alignSelf: 'flex-start',
+                padding: '6px 12px',
+                backgroundColor: '#10b981',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: '0 2px 6px rgba(16, 185, 129, 0.3)',
+              }}
+            >
+              <span>👉 Enter Chat Directly with this Number</span>
+            </button>
+          )}
         </div>
       )}
 
