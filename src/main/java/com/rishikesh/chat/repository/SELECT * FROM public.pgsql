@@ -1,1 +1,0 @@
-SELECT * FROM public.sql_practice_users;

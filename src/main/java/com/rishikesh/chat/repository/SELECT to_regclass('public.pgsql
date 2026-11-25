@@ -1,1 +1,0 @@
-SELECT to_regclass('public.sql_practice_messages');
