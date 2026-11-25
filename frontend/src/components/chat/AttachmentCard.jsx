@@ -80,6 +80,7 @@ const AttachmentCard = ({
 
   return (
     <div
+      className="attachment-card-box"
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -88,8 +89,10 @@ const AttachmentCard = ({
         borderRadius: '12px',
         backgroundColor: isOwn ? 'rgba(0, 0, 0, 0.18)' : 'rgba(255, 255, 255, 0.06)',
         border: isOwn ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid rgba(255, 255, 255, 0.1)',
-        minWidth: '240px',
+        minWidth: 'min(240px, 100%)',
         maxWidth: '360px',
+        width: '100%',
+        boxSizing: 'border-box',
         transition: 'all 0.15s ease',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
       }}

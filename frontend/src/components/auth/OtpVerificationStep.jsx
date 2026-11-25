@@ -368,11 +368,13 @@ const OtpVerificationStep = ({
 
       {/* 6-Digit Code Inputs */}
       <div
+        className="otp-inputs-wrapper"
         style={{
           display: 'flex',
-          gap: '8px',
+          gap: 'clamp(4px, 1.5vw, 8px)',
           justifyContent: 'center',
           marginTop: '4px',
+          width: '100%',
         }}
         onPaste={handlePaste}
       >
@@ -380,6 +382,7 @@ const OtpVerificationStep = ({
           <input
             key={index}
             ref={(el) => (inputRefs.current[index] = el)}
+            className="otp-digit-input"
             type="text"
             inputMode="numeric"
             pattern="[0-9]*"
@@ -389,10 +392,10 @@ const OtpVerificationStep = ({
             onKeyDown={(e) => handleKeyDown(index, e)}
             disabled={isLoading || expiryCountdown <= 0}
             style={{
-              width: '46px',
-              height: '52px',
+              width: 'clamp(36px, 11vw, 46px)',
+              height: 'clamp(44px, 12vw, 52px)',
               textAlign: 'center',
-              fontSize: '22px',
+              fontSize: 'clamp(18px, 5vw, 22px)',
               fontWeight: 700,
               fontFamily: 'monospace',
               color: '#ffffff',
@@ -404,6 +407,7 @@ const OtpVerificationStep = ({
               outline: 'none',
               transition: 'border-color 0.15s, box-shadow 0.15s',
               boxShadow: digit ? '0 0 10px rgba(99, 102, 241, 0.3)' : 'none',
+              flexShrink: 0,
             }}
             onFocus={(e) => {
               e.target.style.borderColor = '#818cf8';

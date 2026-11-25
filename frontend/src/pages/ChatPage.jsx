@@ -269,6 +269,7 @@ const ChatPage = () => {
       style={{
         display: 'flex',
         height: '100vh',
+        minHeight: '100dvh',
         width: '100vw',
         overflow: 'hidden',
         backgroundColor: '#f8fafc',
@@ -315,97 +316,143 @@ const ChatPage = () => {
               flex: 1,
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '32px',
-              textAlign: 'center',
+              height: '100%',
+              overflow: 'hidden',
             }}
           >
+            {/* Mobile Header when no chat is open */}
+            <header
+              className="chat-header-bar mobile-only"
+              style={{
+                height: '56px',
+                padding: '0 clamp(12px, 3vw, 20px)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                backgroundColor: 'var(--bg-header, rgba(17, 24, 39, 0.85))',
+                borderBottom: '1px solid var(--border-light, rgba(255, 255, 255, 0.08))',
+                flexShrink: 0,
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setIsMobileSidebarOpen(true)}
+                style={{
+                  padding: '6px 10px',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--bg-subtle, rgba(255, 255, 255, 0.08))',
+                  color: 'var(--text-main, #f8fafc)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '18px',
+                }}
+                title="Toggle Sidebar"
+              >
+                ☰
+              </button>
+              <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main, #f8fafc)' }}>
+                SyncPulse
+              </span>
+            </header>
+
             <div
               style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.85)',
-                backdropFilter: 'blur(20px) saturate(190%)',
-                WebkitBackdropFilter: 'blur(20px) saturate(190%)',
-                borderRadius: '24px',
-                padding: '48px 40px',
-                maxWidth: '460px',
-                border: '1px solid rgba(255, 255, 255, 0.8)',
-                boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9)',
+                flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                justifyContent: 'center',
+                padding: 'clamp(16px, 4vw, 32px)',
+                textAlign: 'center',
+                overflowY: 'auto',
               }}
             >
               <div
                 style={{
-                  width: '68px',
-                  height: '68px',
-                  borderRadius: '20px',
-                  background: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
-                  color: '#ffffff',
+                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                  backdropFilter: 'blur(20px) saturate(190%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(190%)',
+                  borderRadius: '24px',
+                  padding: 'clamp(24px, 6vw, 48px) clamp(20px, 5vw, 40px)',
+                  maxWidth: 'min(460px, 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.8)',
+                  boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9)',
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '32px',
-                  marginBottom: '20px',
-                  boxShadow: '0 8px 20px rgba(99, 102, 241, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.3)',
                 }}
               >
-                💬
-              </div>
-              <h2
-                style={{
-                  fontSize: '22px',
-                  fontWeight: 700,
-                  color: '#0f172a',
-                  letterSpacing: '-0.02em',
-                  margin: '0 0 8px',
-                }}
-              >
-                Start a Conversation
-              </h2>
-              <p
-                style={{
-                  fontSize: '14px',
-                  color: '#64748b',
-                  lineHeight: 1.6,
-                  margin: '0 0 24px',
-                }}
-              >
-                Find a user by phone or username to start chatting.
-              </p>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <button
-                  onClick={() => setShowNewConvModal(true)}
+                <div
                   style={{
-                    padding: '10px 18px',
-                    backgroundColor: '#4f46e5',
+                    width: '68px',
+                    height: '68px',
+                    borderRadius: '20px',
+                    background: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
                     color: '#ffffff',
-                    border: 'none',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    boxShadow: '0 1px 3px rgba(79, 70, 229, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '32px',
+                    marginBottom: '20px',
+                    boxShadow: '0 8px 20px rgba(99, 102, 241, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.3)',
                   }}
                 >
-                  + Start a Conversation
-                </button>
-                <button
-                  onClick={() => setShowJoinModal(true)}
+                  💬
+                </div>
+                <h2
                   style={{
-                    padding: '10px 18px',
-                    backgroundColor: '#ffffff',
+                    fontSize: '22px',
+                    fontWeight: 700,
                     color: '#0f172a',
-                    border: '1px solid #cbd5e1',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    cursor: 'pointer',
+                    letterSpacing: '-0.02em',
+                    margin: '0 0 8px',
                   }}
                 >
-                  🔗 Open by ID
-                </button>
+                  Start a Conversation
+                </h2>
+                <p
+                  style={{
+                    fontSize: '14px',
+                    color: '#64748b',
+                    lineHeight: 1.6,
+                    margin: '0 0 24px',
+                  }}
+                >
+                  Find a user by phone or username to start chatting.
+                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px' }}>
+                  <button
+                    onClick={() => setShowNewConvModal(true)}
+                    style={{
+                      padding: '10px 18px',
+                      backgroundColor: '#4f46e5',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      boxShadow: '0 1px 3px rgba(79, 70, 229, 0.3)',
+                    }}
+                  >
+                    + Start a Conversation
+                  </button>
+                  <button
+                    onClick={() => setShowJoinModal(true)}
+                    style={{
+                      padding: '10px 18px',
+                      backgroundColor: '#ffffff',
+                      color: '#0f172a',
+                      border: '1px solid #cbd5e1',
+                      borderRadius: '8px',
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    🔗 Open by ID
+                  </button>
+                </div>
               </div>
             </div>
           </div>

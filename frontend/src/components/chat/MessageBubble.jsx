@@ -62,13 +62,14 @@ const MessageBubble = ({
 
   return (
     <div
+      className="message-bubble-wrapper"
       style={{
         display: 'flex',
         flexDirection: isOwn ? 'row-reverse' : 'row',
         alignItems: 'flex-end',
         gap: '8px',
         margin: '8px 0',
-        padding: '0 20px',
+        padding: '0 clamp(8px, 2.5vw, 20px)',
         animation: 'fadeIn 150ms ease-out',
       }}
     >
@@ -80,11 +81,12 @@ const MessageBubble = ({
       )}
 
       <div
+        className="message-bubble-container"
         style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: isOwn ? 'flex-end' : 'flex-start',
-          maxWidth: '74%',
+          maxWidth: 'clamp(74%, 88vw, 85%)',
         }}
       >
         {/* Sender username for received messages */}

@@ -237,6 +237,7 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapturePhoto }) => {
         bottom: 0,
         width: '100vw',
         height: '100vh',
+        minHeight: '100dvh',
         backgroundColor: 'rgba(0, 0, 0, 0.94)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
@@ -244,7 +245,7 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapturePhoto }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '16px',
+        padding: 'clamp(0px, 2vw, 16px)',
         boxSizing: 'border-box',
         animation: 'fadeIn 0.2s ease-out',
       }}
@@ -258,9 +259,9 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapturePhoto }) => {
       <div
         style={{
           width: '100%',
-          maxWidth: '560px',
+          maxWidth: 'min(560px, 100vw)',
           height: '100%',
-          maxHeight: '820px',
+          maxHeight: 'min(820px, 100dvh)',
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',

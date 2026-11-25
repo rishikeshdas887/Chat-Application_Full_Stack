@@ -243,10 +243,11 @@ const AuthPage = () => {
 
       {/* Top Navigation Header */}
       <header
+        className="auth-header-bar"
         style={{
           position: 'relative',
           zIndex: 10,
-          padding: '24px 32px',
+          padding: 'clamp(14px, 3vw, 24px) clamp(16px, 4vw, 32px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -329,6 +330,7 @@ const AuthPage = () => {
 
       {/* Main Content Card */}
       <main
+        className="auth-main"
         style={{
           position: 'relative',
           zIndex: 10,
@@ -336,19 +338,20 @@ const AuthPage = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '24px 16px',
+          padding: 'clamp(12px, 3vw, 24px) clamp(10px, 3vw, 16px)',
         }}
       >
         <div style={{ width: '100%', maxWidth: '440px' }}>
           {/* Glass Card Container */}
           <div
+            className="auth-glass-card"
             style={{
               backgroundColor: 'rgba(17, 24, 39, 0.72)',
               backdropFilter: 'blur(24px)',
               WebkitBackdropFilter: 'blur(24px)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: '20px',
-              padding: '32px 28px',
+              padding: 'clamp(20px, 5vw, 32px) clamp(16px, 5vw, 28px)',
               boxShadow:
                 '0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
               position: 'relative',

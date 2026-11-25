@@ -117,8 +117,9 @@ const MessageInput = ({
 
   return (
     <div
+      className="composer-container"
       style={{
-        padding: '12px 20px',
+        padding: '10px clamp(8px, 3vw, 20px) max(10px, env(safe-area-inset-bottom, 10px))',
         backgroundColor: 'var(--bg-composer, rgba(17, 24, 39, 0.88))',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',

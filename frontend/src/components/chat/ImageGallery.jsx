@@ -80,7 +80,8 @@ const ImageGallery = ({ images = [], onSelectImage }) => {
           borderRadius: '12px',
           overflow: 'hidden',
           cursor: 'pointer',
-          maxWidth: '340px',
+          maxWidth: '100%',
+          width: 'min(340px, 100%)',
           maxHeight: '360px',
           boxShadow: '0 4px 14px rgba(0, 0, 0, 0.12)',
         }}

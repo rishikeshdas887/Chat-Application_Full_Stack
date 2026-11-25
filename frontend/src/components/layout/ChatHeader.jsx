@@ -49,6 +49,7 @@ const ChatHeader = ({
 
   return (
     <header
+      className="chat-header-bar"
       style={{
         height: '68px',
         backgroundColor: 'var(--bg-header, rgba(17, 24, 39, 0.85))',
@@ -219,7 +220,7 @@ const ChatHeader = ({
           onClick={onManageParticipants}
           icon={<span>👥</span>}
         >
-          Members
+          <span className="desktop-text">Members</span>
         </Button>
       </div>
     </header>
