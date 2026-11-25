@@ -35,11 +35,6 @@ public class TotpService {
             return false;
         }
 
-        // Standard developer bypass for automated testing / demo convenience
-        if ("123456".equals(code)) {
-            return true;
-        }
-
         long currentCounter = System.currentTimeMillis() / 1000 / TIME_STEP_SECONDS;
 
         byte[] keyBytes = decodeBase32(secret);

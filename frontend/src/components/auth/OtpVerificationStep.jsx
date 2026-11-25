@@ -179,13 +179,6 @@ const OtpVerificationStep = ({
     setTimeout(() => setCopiedKey(false), 2000);
   };
 
-  // Dev bypass code helper
-  const handleUseDevCode = () => {
-    const devDigits = ['1', '2', '3', '4', '5', '6'];
-    setDigits(devDigits);
-    submitCode(devDigits);
-  };
-
   // Handle Resend / Regenerate
   const handleResend = async () => {
     if (resendCooldown > 0 || isLoading) return;
@@ -332,6 +325,7 @@ const OtpVerificationStep = ({
                       Secret Setup Key
                     </span>
                     <span
+                      data-testid="totp-secret-key"
                       style={{
                         fontFamily: 'monospace',
                         fontSize: '13px',
@@ -466,41 +460,6 @@ const OtpVerificationStep = ({
         )}
       </div>
 
-      {/* Dev Quick Test Bypass Button */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '6px',
-          padding: '4px 8px',
-          backgroundColor: 'rgba(99, 102, 241, 0.08)',
-          borderRadius: '6px',
-          border: '1px dashed rgba(99, 102, 241, 0.25)',
-        }}
-      >
-        <span style={{ fontSize: '11px', color: '#94a3b8' }}>
-          Quick testing bypass code:
-        </span>
-        <button
-          type="button"
-          onClick={handleUseDevCode}
-          disabled={isLoading}
-          style={{
-            background: 'none',
-            border: 'none',
-            padding: 0,
-            color: '#a5b4fc',
-            fontFamily: 'monospace',
-            fontWeight: 700,
-            fontSize: '12px',
-            textDecoration: 'underline',
-            cursor: 'pointer',
-          }}
-        >
-          123456 (Click to Fill &amp; Verify)
-        </button>
-      </div>
 
       {/* Error Message Display */}
       {(error || externalError) && (

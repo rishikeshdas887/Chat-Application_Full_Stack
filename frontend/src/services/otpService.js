@@ -167,7 +167,7 @@ export const sendOtp = async (phoneNumber) => {
       console.info(`[SMS Gateway] Dispatched SMS to ${normalizedPhone} via ${gatewayResult.gateway}. Valid for 10 mins.`);
     } else {
       console.info(
-        `%c[SyncPulse SMS Gateway Notice]%c No live SMS API key (VITE_FAST2SMS_API_KEY or Twilio) configured. Verification code: %c${rawCode}%c (or master test code: %c123456%c) • Valid for 10 minutes.`,
+        `%c[SyncPulse SMS Gateway Notice]%c No live SMS API key (VITE_FAST2SMS_API_KEY or Twilio) configured. Verification code: %c${rawCode}%c • Valid for 10 minutes.`,
         'color: #4f46e5; font-weight: bold;',
         'color: inherit;',
         'color: #059669; font-weight: bold;',
@@ -222,9 +222,8 @@ export const verifyOtp = async (phoneNumber, inputCode) => {
 
   const inputHashed = await hashOtp(code);
   const isHashMatch = record.hashedCode === inputHashed;
-  const isMasterDevCode = code === '123456';
 
-  if (!isHashMatch && !isMasterDevCode) {
+  if (!isHashMatch) {
     if (record.attempts >= record.maxAttempts) {
       otpStore.delete(normalizedPhone);
       return {

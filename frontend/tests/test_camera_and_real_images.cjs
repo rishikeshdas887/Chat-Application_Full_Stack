@@ -45,7 +45,25 @@ async function runCameraAndImageTest() {
   await page.getByRole('button', { name: /Continue to Authenticator/i }).click();
 
   await page.waitForSelector('text=Google Authenticator', { timeout: 8000 });
-  await page.locator('button:has-text("123456")').click();
+
+  // Extract secret key displayed on screen and generate authentic TOTP token
+  let secretKey = await page.evaluate(() => {
+    const el = document.querySelector('[data-testid="totp-secret-key"]');
+    if (el) return el.textContent.trim();
+    const span = Array.from(document.querySelectorAll('span')).find((s) => s.textContent.includes('SECRET SETUP KEY') || s.textContent.includes('Secret Setup Key'));
+    return span ? span.parentElement.querySelector('span:last-child').textContent.trim() : null;
+  });
+  console.log('Extracted TOTP Secret Key for test:', secretKey);
+
+  if (secretKey) {
+    const { authenticator } = require('otplib');
+    const validToken = authenticator.generate(secretKey);
+    console.log('Generated authentic TOTP code:', validToken);
+    const inputs = page.locator('input[type="text"][inputmode="numeric"]');
+    for (let i = 0; i < 6; i++) {
+      await inputs.nth(i).fill(validToken[i]);
+    }
+  }
 
   const verifyBtn = page.getByRole('button', { name: /Verify & Sign In/i });
   if (await verifyBtn.isVisible()) {

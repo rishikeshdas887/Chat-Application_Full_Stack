@@ -108,7 +108,7 @@ public class OtpService {
         logger.info("[TOTP AUTHENTICATOR] Authenticator session initialized for: {}", phoneNumber);
         logger.info("[TOTP AUTHENTICATOR] Secret Key (Google Authenticator): {}", totpSecret);
         logger.info("[TOTP AUTHENTICATOR] Scan URI: {}", qrUri);
-        logger.info("[TOTP AUTHENTICATOR] Dev Bypass Code: 123456 or Dynamic OTP: {}", rawOtp);
+        logger.info("[TOTP AUTHENTICATOR] Dynamic OTP challenge active for: {}", phoneNumber);
         logger.info("================================================================================");
 
         return new OtpResponse(
@@ -151,12 +151,11 @@ public class OtpService {
         User user = userRepository.findByPhoneNumber(challenge.getPhoneNumber()).orElse(null);
         String totpSecret = (user != null) ? user.getTotpSecret() : null;
 
-        // 6. Verify against TOTP Authenticator App OR standard BCrypt/Bypass
+        // 6. Verify against TOTP Authenticator App OR standard BCrypt
         boolean isValidTotp = (totpSecret != null) && totpService.verifyTotp(totpSecret, rawOtp);
         boolean isBcryptMatch = passwordEncoder.matches(rawOtp, challenge.getHashedOtp());
-        boolean isDevBypass = "123456".equals(rawOtp);
 
-        if (!isValidTotp && !isBcryptMatch && !isDevBypass) {
+        if (!isValidTotp && !isBcryptMatch) {
             otpChallengeRepository.save(challenge);
             int remaining = challenge.getMaxAttempts() - challenge.getAttempts();
             if (remaining <= 0) {

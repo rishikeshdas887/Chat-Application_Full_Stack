@@ -67,10 +67,8 @@ export async function generate2FA(userEmail) {
  */
 export function verifyOTP(userInputToken, savedUserSecret) {
   if (!userInputToken) return false;
-  // Dev bypass code for testing
-  if (userInputToken === '123456') return true;
   if (!savedUserSecret) return false;
-  // Returns true if the 6-digit code matches, false otherwise
+  // Strictly verify against the authenticator app token (RFC 6238 TOTP)
   const isValid = authenticator.check(userInputToken, savedUserSecret);
   return isValid;
 }

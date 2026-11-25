@@ -60,10 +60,6 @@ async function runTest() {
     for (let i = 0; i < 6; i++) {
       await inputs.nth(i).fill(validToken[i]);
     }
-  } else {
-    // Quick test bypass fallback
-    console.log('Using quick test bypass button...');
-    await page.locator('button:has-text("123456")').click();
   }
 
   // If verify button is still visible, click Verify & Sign In
