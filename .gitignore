@@ -1,0 +1,65 @@
+# =============================================================================
+# Root .gitignore — Chat-Application Full Stack
+# =============================================================================
+
+# --- Environment & Secret Keys ---
+*.env
+*.env.*
+!.env.example
+*.secret
+*.key
+*.pem
+*.pfx
+*.jks
+*.keystore
+credentials.json
+client_secrets.json
+application-local.properties
+application-dev.properties
+
+# --- Node & Frontend Build Artifacts ---
+node_modules/
+dist/
+dist-ssr/
+.vercel/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Java & Maven Build Artifacts ---
+target/
+build/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+HELP.md
+
+# --- Runtime Uploads, Storage & Logs ---
+uploads/
+backend/uploads/
+logs/
+*.log
+*.sqlite
+*.db
+
+# --- OS & IDE Temporary Files ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

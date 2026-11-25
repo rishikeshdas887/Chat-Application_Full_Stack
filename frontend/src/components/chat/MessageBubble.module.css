@@ -1,0 +1,17 @@
+.wrap { display: flex; flex-direction: column; max-width: 65%; margin-bottom: 4px; }
+.wrapOwn { align-self: flex-end; align-items: flex-end; }
+.wrapOther { align-self: flex-start; align-items: flex-start; }
+.senderName { font-size: var(--font-size-xs); color: var(--color-text-secondary); margin-bottom: 3px; font-weight: var(--font-weight-medium); padding-left: 4px; }
+.bubble {
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-md);
+  line-height: 1.55;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.bubbleOwn { background: var(--color-sent-bg); color: var(--color-sent-text); border-bottom-right-radius: var(--radius-xs); }
+.bubbleOther { background: var(--color-received-bg); color: var(--color-text-primary); border-bottom-left-radius: var(--radius-xs); }
+.timestamp { font-size: 10px; margin-top: 4px; padding: 0 4px; }
+.timestampOwn { color: rgba(255,255,255,0.6); text-align: right; }
+.timestampOther { color: var(--color-text-muted); }

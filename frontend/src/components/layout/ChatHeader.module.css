@@ -1,0 +1,16 @@
+.header {
+  height: var(--header-height);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 12px;
+  flex-shrink: 0;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.info { flex: 1; min-width: 0; }
+.name { font-size: var(--font-size-md); font-weight: var(--font-weight-bold); color: var(--color-text-primary); }
+.meta { font-size: var(--font-size-xs); color: var(--color-text-secondary); display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+.onlineDot { width: 7px; height: 7px; border-radius: 50%; background: var(--color-success); flex-shrink: 0; }
+.typeBadge { background: rgba(79,142,247,0.1); color: var(--color-primary); border-radius: var(--radius-xs); font-size: 10px; font-weight: var(--font-weight-semibold); padding: 2px 7px; text-transform: uppercase; letter-spacing: 0.05em; }

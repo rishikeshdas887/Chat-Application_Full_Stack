@@ -1,0 +1,4 @@
+.list { display: flex; flex-direction: column; }
+.empty { padding: 40px 16px; text-align: center; color: rgba(226,232,240,0.4); font-size: var(--font-size-sm); line-height: 1.6; }
+.emptyIcon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
+.sectionLabel { padding: 10px 16px 4px; font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); color: rgba(226,232,240,0.4); text-transform: uppercase; letter-spacing: 0.08em; }
