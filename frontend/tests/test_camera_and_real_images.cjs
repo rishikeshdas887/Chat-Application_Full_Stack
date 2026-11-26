@@ -67,7 +67,7 @@ async function runCameraAndImageTest() {
 
   const verifyBtn = page.getByRole('button', { name: /Verify & Sign In/i });
   if (await verifyBtn.isVisible()) {
-    await verifyBtn.click().catch(() => {});
+    await verifyBtn.click().catch(() => { });
   }
 
   await page.waitForURL('**/chat', { timeout: 10000 });
@@ -141,7 +141,7 @@ async function runCameraAndImageTest() {
   }
 
   // Ensure modal is closed before Step 4
-  await page.locator('div[role="dialog"]').waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  await page.locator('div[role="dialog"]').waitFor({ state: 'detached', timeout: 5000 }).catch(() => { });
 
   // STEP 4: Test Real Image Upload & Timeline Rendering (No "Failed to load"!)
   console.log('\n[STEP 4] Testing real image upload & rendering in timeline...');

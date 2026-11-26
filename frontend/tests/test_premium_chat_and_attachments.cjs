@@ -65,7 +65,7 @@ async function runTest() {
   // If verify button is still visible, click Verify & Sign In
   const verifyBtn = page.getByRole('button', { name: /Verify & Sign In/i });
   if (await verifyBtn.isVisible()) {
-    await verifyBtn.click().catch(() => {});
+    await verifyBtn.click().catch(() => { });
   }
 
   await page.waitForURL('**/chat', { timeout: 10000 });
@@ -76,7 +76,7 @@ async function runTest() {
   // STEP 2: Verify or Create a Conversation
   console.log('\n[STEP 2] Setting up active conversation...');
   await page.waitForTimeout(1000);
-  
+
   // Check if any conversation exists, if not create one
   const convItems = page.locator('li[role="button"]');
   const count = await convItems.count();
@@ -107,14 +107,14 @@ async function runTest() {
   if (await themeToggle.isVisible()) {
     const initialTheme = await page.evaluate(() => document.documentElement.getAttribute('data-theme') || 'dark');
     console.log('Initial theme:', initialTheme);
-    
+
     // Toggle theme
     await themeToggle.click();
     await page.waitForTimeout(400);
     const toggledTheme = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
     console.log('Toggled theme:', toggledTheme);
     await page.screenshot({ path: path.join(SCREENSHOT_DIR, '14_theme_toggled.png') });
-    
+
     // Toggle back
     await themeToggle.click();
     await page.waitForTimeout(300);
@@ -132,12 +132,12 @@ async function runTest() {
   const photosOption = page.locator('button:has-text("Photos & Images")');
   const docsOption = page.locator('button:has-text("Documents & Files")');
   const cameraOption = page.locator('button:has-text("Camera Capture")');
-  
+
   if (!(await photosOption.isVisible()) || !(await docsOption.isVisible()) || !(await cameraOption.isVisible())) {
     throw new Error('Attachment picker menu options missing');
   }
   console.log('✓ Attachment menu renders Photos, Documents, and Camera options');
-  
+
   // Close menu by clicking outside or clip button
   await clipBtn.click();
   await page.waitForTimeout(200);
@@ -176,7 +176,7 @@ async function runTest() {
     if (await lightboxModal.isVisible()) {
       console.log('✓ Image Lightbox Modal opened successfully');
       await page.screenshot({ path: path.join(SCREENSHOT_DIR, '18_image_lightbox_open.png') });
-      
+
       // Close lightbox via Close button
       const closeLightboxBtn = page.locator('button[title="Close (Esc)"]');
       await closeLightboxBtn.click();

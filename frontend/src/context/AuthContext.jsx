@@ -42,6 +42,11 @@ export const AuthProvider = ({ children }) => {
       };
       localStorage.setItem('chatapp_token', data.accessToken);
       localStorage.setItem('chatapp_user', JSON.stringify(userData));
+      localStorage.setItem('syncpulse_remembered_account', JSON.stringify({
+        userId: userData.userId,
+        username: userData.username,
+        phoneNumber: userData.phoneNumber,
+      }));
       setUser(userData);
       return userData;
     } finally {
@@ -74,6 +79,11 @@ export const AuthProvider = ({ children }) => {
       };
       localStorage.setItem('chatapp_token', data.accessToken);
       localStorage.setItem('chatapp_user', JSON.stringify(userData));
+      localStorage.setItem('syncpulse_remembered_account', JSON.stringify({
+        userId: userData.userId,
+        username: userData.username,
+        phoneNumber: userData.phoneNumber,
+      }));
       setUser(userData);
       return userData;
     } finally {
@@ -133,29 +143,30 @@ export const AuthProvider = ({ children }) => {
       try {
         const saved = JSON.parse(localStorage.getItem('chatapp_user') || 'null');
         if (saved?.username) resolved = saved;
-      } catch {}
-    }
-    if (!resolved) {
-      try {
-        const registered = JSON.parse(localStorage.getItem('syncpulse_registered_accounts') || '[]');
-        if (registered.length > 0) resolved = registered[0];
+        const remembered = JSON.parse(localStorage.getItem('syncpulse_remembered_account') || 'null');
+        if (!resolved && remembered?.username) resolved = remembered;
       } catch {}
     }
 
-    const finalUsername = resolved?.username || 'Rishikesh';
-    const finalUserId = resolved?.userId || resolved?.id || 2;
-    const finalPhone = resolved?.phoneNumber || '+916297799544';
+    if (!resolved?.username) {
+      return null;
+    }
 
     const userData = {
-      userId: finalUserId,
-      username: finalUsername,
-      phoneNumber: finalPhone,
-      token: 'syncpulse-session-jwt-token-production',
+      userId: resolved.userId || resolved.id || 2,
+      username: resolved.username,
+      phoneNumber: resolved.phoneNumber,
+      token: resolved.token || 'syncpulse-session-jwt-token-production',
       tokenType: 'Bearer',
       expiresIn: 86400,
     };
     localStorage.setItem('chatapp_token', userData.token);
     localStorage.setItem('chatapp_user', JSON.stringify(userData));
+    localStorage.setItem('syncpulse_remembered_account', JSON.stringify({
+      userId: userData.userId,
+      username: userData.username,
+      phoneNumber: userData.phoneNumber,
+    }));
     setUser(userData);
     return userData;
   };

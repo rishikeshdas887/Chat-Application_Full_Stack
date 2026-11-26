@@ -17,16 +17,36 @@ async function runDirectEntryTest() {
   const page = await context.newPage();
 
   try {
-    // 1. Visit Welcome Screen
+    // 1. Visit Welcome Screen as a brand new visitor
     await page.goto('http://localhost:5173', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(600);
 
-    // Verify 1-Click Direct Button is present
-    const directBtn = page.getByRole('button', { name: /Enter as|Enter Chat Directly/i }).first();
+    // Verify 1-Click Direct Button is NOT visible to anonymous strangers
+    const initialDirectBtn = page.getByRole('button', { name: /Enter as|1-Click Direct/i }).first();
+    const isInitiallyVisible = await initialDirectBtn.isVisible().catch(() => false);
+    console.log(`Direct entry button visible to fresh anonymous visitor: ${isInitiallyVisible} (must be false)`);
+    if (isInitiallyVisible) {
+      throw new Error('FAILED: Direct entry button was visible to an anonymous visitor without saved account!');
+    }
+    console.log('✓ Confirmed: Fresh visitors see ZERO private usernames or phone numbers.');
+
+    // 2. Simulate returning user on this device with saved account
+    await page.evaluate(() => {
+      localStorage.setItem('syncpulse_remembered_account', JSON.stringify({
+        username: 'Rishikesh',
+        phoneNumber: '+916297799544',
+        userId: 2,
+      }));
+    });
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(500);
+
+    // Verify 1-Click Direct Button is now present for returning user
+    const directBtn = page.getByRole('button', { name: /Enter as|1-Click Direct/i }).first();
     const isDirectVisible = await directBtn.isVisible();
-    console.log(`Direct entry button visible: ${isDirectVisible}`);
+    console.log(`Direct entry button visible for returning device: ${isDirectVisible}`);
     if (!isDirectVisible) {
-      throw new Error('FAILED: Direct entry button is not visible on welcome screen!');
+      throw new Error('FAILED: Direct entry button is not visible for returning user!');
     }
 
     await page.screenshot({ path: path.join(SCREENSHOT_DIR, '36_welcome_screen_direct_entry_card.png') });

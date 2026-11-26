@@ -94,8 +94,23 @@ async function runSecurityAuditTests() {
     await page.goto('http://localhost:5173', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(500);
 
-    const directBtn = page.getByRole('button', { name: /Enter as|Enter Chat Directly/i }).first();
-    assert(await directBtn.isVisible(), 'Authentication UI renders with 1-click entrance option');
+    // Verify fresh visitor privacy (zero leaked private details)
+    const directBtnAnonymous = page.getByRole('button', { name: /Enter as|1-Click Direct/i }).first();
+    assert(!(await directBtnAnonymous.isVisible().catch(() => false)), 'Category 13: Zero private credentials leaked to anonymous visitors');
+
+    // Simulate returning user with saved account on their personal device
+    await page.evaluate(() => {
+      localStorage.setItem('syncpulse_remembered_account', JSON.stringify({
+        username: 'Rishikesh',
+        phoneNumber: '+916297799544',
+        userId: 2,
+      }));
+    });
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(500);
+
+    const directBtn = page.getByRole('button', { name: /Enter as|1-Click Direct/i }).first();
+    assert(await directBtn.isVisible(), 'Authentication UI renders with 1-click entrance option for returning user');
 
     await directBtn.click();
     await page.waitForURL('**/chat', { timeout: 8000 });
