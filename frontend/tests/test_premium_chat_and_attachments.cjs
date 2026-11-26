@@ -3,10 +3,10 @@ const path = require('path');
 const fs = require('fs');
 const { authenticator } = require('otplib');
 
-const SCREENSHOT_DIR = '/home/whitedevil/.gemini/antigravity/brain/b4f08ce3-45d6-4a76-a7dd-987d84caf18a/screenshots';
+const SCREENSHOT_DIR = process.env.SCREENSHOT_DIR || '/home/whitedevil/.gemini/antigravity/brain/b4f08ce3-45d6-4a76-a7dd-987d84caf18a/screenshots';
 fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
 
-const FIXTURES_DIR = '/home/whitedevil/Desktop/chat-app-frontend/tests/fixtures';
+const FIXTURES_DIR = path.resolve(__dirname, 'fixtures');
 
 async function runTest() {
   console.log('=== STARTING PREMIUM CHAT & ATTACHMENT SUITE ===');
@@ -82,7 +82,7 @@ async function runTest() {
   const count = await convItems.count();
   if (count === 0) {
     console.log('Creating a new conversation for test...');
-    await page.getByRole('button', { name: /\+ New Conversation/i }).first().click();
+    await page.locator('button:has-text("New Chat"), button:has-text("New Conversation")').first().click();
     await page.waitForTimeout(500);
     const groupTab = page.locator('button:has-text("Group Chat")');
     if (await groupTab.isVisible()) {

@@ -2,10 +2,10 @@ const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
 
-const SCREENSHOT_DIR = '/home/whitedevil/.gemini/antigravity/brain/b4f08ce3-45d6-4a76-a7dd-987d84caf18a/screenshots';
+const SCREENSHOT_DIR = process.env.SCREENSHOT_DIR || '/home/whitedevil/.gemini/antigravity/brain/b4f08ce3-45d6-4a76-a7dd-987d84caf18a/screenshots';
 fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
 
-const FIXTURES_DIR = '/home/whitedevil/Desktop/chat-app-frontend/tests/fixtures';
+const FIXTURES_DIR = path.resolve(__dirname, 'fixtures');
 
 async function runCameraAndImageTest() {
   console.log('=== RUNNING WHATSAPP CAMERA & REAL ATTACHMENT SUITE ===');
@@ -80,7 +80,7 @@ async function runCameraAndImageTest() {
   const convItems = page.locator('li[role="button"]');
   const count = await convItems.count();
   if (count === 0) {
-    await page.getByRole('button', { name: /\+ New Conversation/i }).first().click();
+    await page.locator('button:has-text("New Chat"), button:has-text("New Conversation")').first().click();
     await page.waitForTimeout(400);
     const groupTab = page.locator('button:has-text("Group Chat")');
     if (await groupTab.isVisible()) {

@@ -14,9 +14,11 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapturePhoto }) => {
   const streamRef = useRef(null);
   const canvasRef = useRef(null);
   const fallbackInputRef = useRef(null);
+  const cameraRequestIdRef = useRef(0);
 
   // Stop video stream cleanly without triggering React dependency re-renders
   const stopStream = useCallback(() => {
+    cameraRequestIdRef.current += 1;
     if (streamRef.current) {
       try {
         streamRef.current.getTracks().forEach((track) => track.stop());
@@ -30,6 +32,7 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapturePhoto }) => {
 
   // Start live camera stream
   const startCamera = useCallback(async (mode) => {
+    const currentRequestId = ++cameraRequestIdRef.current;
     setCameraError('');
 
     // Stop existing stream if running
@@ -68,6 +71,17 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapturePhoto }) => {
           video: true,
           audio: false,
         });
+      }
+
+      if (currentRequestId !== cameraRequestIdRef.current) {
+        if (mediaStream) {
+          try {
+            mediaStream.getTracks().forEach((track) => track.stop());
+          } catch {
+            // ignore
+          }
+        }
+        return;
       }
 
       streamRef.current = mediaStream;

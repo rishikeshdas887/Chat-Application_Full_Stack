@@ -16,7 +16,8 @@ async function runSecurityAuditTests() {
   }
 
   // 1. Security Headers & CSP in vercel.json
-  const vercelConfig = JSON.parse(fs.readFileSync('/home/whitedevil/Desktop/chat-app-frontend/vercel.json', 'utf8'));
+  const vercelPath = path.resolve(__dirname, '../vercel.json');
+  const vercelConfig = JSON.parse(fs.readFileSync(vercelPath, 'utf8'));
   const headerRule = vercelConfig.headers?.find(h => h.source === '/(.*)');
   const headerKeys = (headerRule?.headers || []).map(h => h.key);
   assert(headerKeys.includes('X-Frame-Options'), 'Category 30: X-Frame-Options clickjacking protection header configured');

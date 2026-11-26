@@ -21,10 +21,6 @@ const otpStore = new Map();
  * When an API key is provided, cellular SMS packets are delivered directly to the user's phone.
  */
 export const dispatchSmsGateway = async (phoneNumber, code) => {
-  const fast2SmsKey = import.meta.env.VITE_FAST2SMS_API_KEY;
-  const twilioSid = import.meta.env.VITE_TWILIO_ACCOUNT_SID;
-  const twilioToken = import.meta.env.VITE_TWILIO_AUTH_TOKEN;
-  const twilioPhone = import.meta.env.VITE_TWILIO_PHONE_NUMBER;
   const customSmsWebhook = import.meta.env.VITE_SMS_WEBHOOK_URL;
 
   // 1. Custom SMS Webhook
@@ -41,48 +37,8 @@ export const dispatchSmsGateway = async (phoneNumber, code) => {
     }
   }
 
-  // SMS gateways have been superseded by 100% Free RFC 6238 TOTP (Google Authenticator)
+  // Verification is securely facilitated via RFC 6238 TOTP (Authenticator App)
   return { sent: false, gateway: 'totp-authenticator' };
-
-  // 3. Twilio SMS Gateway
-  if (twilioSid && twilioToken && twilioPhone) {
-    try {
-      const authHeader = 'Basic ' + btoa(`${twilioSid}:${twilioToken}`);
-      const body = new URLSearchParams({
-        To: phoneNumber,
-        From: twilioPhone,
-        Body: `Your SyncPulse verification code is ${code}. Valid for 10 minutes.`,
-      });
-      await fetch(`https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`, {
-        method: 'POST',
-        headers: {
-          Authorization: authHeader,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: body.toString(),
-      });
-      return { sent: true, gateway: 'twilio' };
-    } catch (err) {
-      console.warn('Twilio SMS gateway dispatch error:', err);
-    }
-  }
-
-  // 4. 2Factor.in Gateway (Indian OTP gateway)
-  const twoFactorKey = import.meta.env.VITE_2FACTOR_API_KEY;
-  if (twoFactorKey) {
-    try {
-      const response = await fetch(
-        `https://2factor.in/API/V1/${twoFactorKey}/SMS/${phoneNumber}/${code}`,
-        { method: 'GET' }
-      );
-      const resData = await response.json();
-      return { sent: resData.Status === 'Success', gateway: '2factor', details: resData };
-    } catch (err) {
-      console.warn('2Factor gateway dispatch error:', err);
-    }
-  }
-
-  return { sent: false, gateway: 'none' };
 };
 
 /**
@@ -166,15 +122,7 @@ export const sendOtp = async (phoneNumber) => {
     if (gatewayResult.sent) {
       console.info(`[SMS Gateway] Dispatched SMS to ${normalizedPhone} via ${gatewayResult.gateway}. Valid for 10 mins.`);
     } else {
-      console.info(
-        `%c[SyncPulse SMS Gateway Notice]%c No live SMS API key (VITE_FAST2SMS_API_KEY or Twilio) configured. Verification code: %c${rawCode}%c • Valid for 10 minutes.`,
-        'color: #4f46e5; font-weight: bold;',
-        'color: inherit;',
-        'color: #059669; font-weight: bold;',
-        'color: inherit;',
-        'color: #d97706; font-weight: bold;',
-        'color: inherit;'
-      );
+      console.info('[SyncPulse Security] Verification dispatched via TOTP Authenticator app.');
     }
   });
 

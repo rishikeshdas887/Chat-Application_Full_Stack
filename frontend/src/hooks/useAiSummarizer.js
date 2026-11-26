@@ -42,6 +42,7 @@ export const useAiSummarizer = ({ conversationId, messages = [] }) => {
 
   const debounceTimerRef = useRef(null);
   const prevMessageCountRef = useRef(messages.length);
+  const generateSummaryRef = useRef(null);
 
   // Probe WebGPU and Ollama capabilities on mount
   useEffect(() => {
@@ -147,6 +148,10 @@ export const useAiSummarizer = ({ conversationId, messages = [] }) => {
     [conversationId, messages, selectedEngine, selectedModel, anonymize, summariesMap]
   );
 
+  useEffect(() => {
+    generateSummaryRef.current = generateSummary;
+  }, [generateSummary]);
+
   // Auto-generate initial summary for conversation if autoSummarize is on
   useEffect(() => {
     if (!autoSummarize || !conversationId) return;
@@ -175,7 +180,9 @@ export const useAiSummarizer = ({ conversationId, messages = [] }) => {
       }
 
       debounceTimerRef.current = setTimeout(() => {
-        generateSummary(true);
+        if (generateSummaryRef.current) {
+          generateSummaryRef.current(true);
+        }
       }, 2500); // 2.5s debounce to let rapid typing settle
     }
 
@@ -186,7 +193,7 @@ export const useAiSummarizer = ({ conversationId, messages = [] }) => {
         clearTimeout(debounceTimerRef.current);
       }
     };
-  }, [messages, autoSummarize, conversationId, generateSummary]);
+  }, [messages.length, autoSummarize, conversationId]);
 
   /**
    * Clear current conversation summary from memory

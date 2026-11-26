@@ -54,9 +54,12 @@ const MessageBubble = ({
     }
   }
 
-  const isAttachmentMessage = Boolean(attachment);
+  const isAttachmentMessage = Boolean(attachment && typeof attachment === 'object');
   const isImageAttachment =
-    (isAttachmentMessage && (attachment.isImage || attachment.category === 'IMAGE' || attachment.type?.startsWith('image/'))) ||
+    (isAttachmentMessage &&
+      (attachment.isImage === true ||
+        attachment.category === 'IMAGE' ||
+        (typeof attachment.type === 'string' && attachment.type.startsWith('image/')))) ||
     type === 'IMAGE' ||
     (typeof message.content === 'string' && message.content.startsWith('data:image/'));
 
@@ -137,7 +140,12 @@ const MessageBubble = ({
                   images={[
                     {
                       url: attachment.remoteUrl || attachment.dataUrl || attachment.previewUrl,
-                      dataUrl: attachment.dataUrl || (attachment.remoteUrl?.startsWith('data:image/') ? attachment.remoteUrl : null),
+                      dataUrl:
+                        typeof attachment.dataUrl === 'string'
+                          ? attachment.dataUrl
+                          : typeof attachment.remoteUrl === 'string' && attachment.remoteUrl.startsWith('data:image/')
+                          ? attachment.remoteUrl
+                          : null,
                       thumbnail: attachment.thumbnail,
                       previewUrl: attachment.previewUrl,
                       name: attachment.name || 'Photo',

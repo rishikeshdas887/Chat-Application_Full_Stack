@@ -194,6 +194,10 @@ export const uploadAttachment = async (
   // NEVER use a blob: URL for remoteUrl! If no backend url returned, use persistent dataUrl
   const finalRemoteUrl = remoteUrl || dataUrl;
 
+  if (!finalRemoteUrl) {
+    throw new Error('Upload failed: Neither server storage URL nor client data URL could be generated.');
+  }
+
   return {
     ...attachment,
     dataUrl,

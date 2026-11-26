@@ -101,14 +101,14 @@ export const formatFileSize = (bytes) => {
  * Get category and visual configuration from MIME type or file extension
  */
 export const getFileMetadata = (mimeType = '', filename = '') => {
-  const cleanMime = (mimeType || '').toLowerCase().trim();
-  if (ALLOWED_MIME_TYPES[cleanMime]) {
+  const cleanMime = typeof mimeType === 'string' ? mimeType.toLowerCase().trim() : '';
+  if (cleanMime && ALLOWED_MIME_TYPES[cleanMime]) {
     return ALLOWED_MIME_TYPES[cleanMime];
   }
 
   // Fallback check by extension
-  const cleanName = (filename || '').toLowerCase().trim();
-  const ext = '.' + cleanName.split('.').pop();
+  const cleanName = typeof filename === 'string' ? filename.toLowerCase().trim() : '';
+  const ext = cleanName.includes('.') ? '.' + cleanName.split('.').pop() : '';
 
   for (const info of Object.values(ALLOWED_MIME_TYPES)) {
     if (info.ext === ext) return info;
