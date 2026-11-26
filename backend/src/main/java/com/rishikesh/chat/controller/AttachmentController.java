@@ -30,6 +30,13 @@ public class AttachmentController {
 
     private final Path uploadDir = Paths.get("uploads", "attachments").toAbsolutePath().normalize();
 
+    private static final long MAX_FILE_SIZE_BYTES = 25 * 1024 * 1024; // 25 MB
+    private static final java.util.Set<String> ALLOWED_EXTENSIONS = java.util.Set.of(
+            ".jpg", ".jpeg", ".png", ".webp", ".gif",
+            ".pdf", ".docx", ".doc", ".xlsx", ".xls",
+            ".pptx", ".ppt", ".txt", ".md", ".csv", ".zip"
+    );
+
     public AttachmentController() {
         try {
             Files.createDirectories(uploadDir);
@@ -49,12 +56,31 @@ public class AttachmentController {
             return ResponseEntity.badRequest().body(err);
         }
 
+        if (file.getSize() > MAX_FILE_SIZE_BYTES) {
+            Map<String, Object> err = new HashMap<>();
+            err.put("error", "File exceeds maximum permitted size of 25 MB");
+            return ResponseEntity.badRequest().body(err);
+        }
+
+        String originalName = file.getOriginalFilename();
+        if (originalName == null || originalName.trim().isEmpty()) {
+            originalName = "attachment";
+        }
+
+        String lowerName = originalName.toLowerCase();
+        int dotIndex = lowerName.lastIndexOf('.');
+        String ext = dotIndex != -1 ? lowerName.substring(dotIndex) : "";
+
+        if (!ALLOWED_EXTENSIONS.contains(ext)) {
+            Map<String, Object> err = new HashMap<>();
+            err.put("error", "File format not supported. Only safe images, documents, and archives are allowed.");
+            return ResponseEntity.badRequest().body(err);
+        }
+
         try {
             Files.createDirectories(uploadDir);
 
-            String originalName = file.getOriginalFilename();
-            if (originalName == null) originalName = "attachment";
-            // Clean filename
+            // Clean filename and generate unguessable UUID storage path
             String cleanName = originalName.replaceAll("[^a-zA-Z0-9._-]", "_");
             String storedFileName = UUID.randomUUID().toString() + "_" + cleanName;
             Path targetLocation = uploadDir.resolve(storedFileName);
@@ -98,9 +124,15 @@ public class AttachmentController {
                 contentType = "application/octet-stream";
             }
 
+            // Defense against Stored XSS: Only safe raster images are rendered inline, others forced to download
+            boolean isSafeRasterImage = contentType.equals("image/jpeg") || contentType.equals("image/png") ||
+                                       contentType.equals("image/webp") || contentType.equals("image/gif");
+            String disposition = isSafeRasterImage ? "inline" : "attachment";
+
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .header("X-Content-Type-Options", "nosniff")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, disposition + "; filename=\"" + resource.getFilename() + "\"")
                     .body(resource);
 
         } catch (MalformedURLException e) {

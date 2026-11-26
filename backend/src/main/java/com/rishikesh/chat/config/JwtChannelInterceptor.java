@@ -27,24 +27,26 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
                 MessageHeaderAccessor.getAccessor(
                         message, StompHeaderAccessor.class);
 
-        if (accessor != null &&
-                StompCommand.CONNECT.equals(accessor.getCommand())) {
+        if (accessor != null) {
+            if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+                String authHeader = accessor.getFirstNativeHeader("Authorization");
 
-            String authHeader =
-                    accessor.getFirstNativeHeader("Authorization");
+                if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                    throw new IllegalArgumentException("Missing or invalid JWT");
+                }
 
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                throw new IllegalArgumentException("Missing or invalid JWT");
+                String token = authHeader.substring(7);
+
+                Jwt jwt = jwtDecoder.decode(token);
+
+                JwtAuthenticationToken authentication = new JwtAuthenticationToken(jwt);
+
+                accessor.setUser(authentication);
+            } else if (StompCommand.SUBSCRIBE.equals(accessor.getCommand()) || StompCommand.SEND.equals(accessor.getCommand())) {
+                if (accessor.getUser() == null) {
+                    throw new SecurityException("Unauthorized WebSocket action");
+                }
             }
-
-            String token = authHeader.substring(7);
-
-            Jwt jwt = jwtDecoder.decode(token);
-
-            JwtAuthenticationToken authentication =
-                    new JwtAuthenticationToken(jwt);
-
-            accessor.setUser(authentication);
         }
 
         return message;

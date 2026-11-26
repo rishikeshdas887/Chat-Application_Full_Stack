@@ -27,30 +27,39 @@ export const isExplicitDemoMode = () => {
   return import.meta.env.VITE_DEMO_MODE === 'true';
 };
 
+/**
+ * Prototype pollution safe JSON parser
+ */
+export const safeJsonParse = (str, fallback = null) => {
+  if (!str || typeof str !== 'string') return fallback;
+  try {
+    return JSON.parse(str, (key, value) => {
+      if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+        return undefined;
+      }
+      return value;
+    });
+  } catch {
+    return fallback;
+  }
+};
+
 const getParticipantRoster = (convId) => {
   const key = `syncpulse_participants_${convId}`;
   const stored = sessionStorage.getItem(key);
   if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch {
-      // ignore
-    }
+    const parsed = safeJsonParse(stored, null);
+    if (parsed) return parsed;
   }
   return [];
 };
 
 const getRegisteredAccounts = () => {
-  try {
-    const list = JSON.parse(
-      localStorage.getItem('syncpulse_registered_accounts') ||
-      localStorage.getItem('syncpulse_registered_users') ||
-      '[]'
-    );
-    return Array.isArray(list) ? list : [];
-  } catch {
-    return [];
-  }
+  const raw = localStorage.getItem('syncpulse_registered_accounts') ||
+              localStorage.getItem('syncpulse_registered_users') ||
+              '[]';
+  const list = safeJsonParse(raw, []);
+  return Array.isArray(list) ? list : [];
 };
 
 const saveRegisteredAccount = (account) => {
@@ -78,11 +87,7 @@ const handleMockFallback = async (config) => {
   const method = (config.method || 'get').toLowerCase();
   let body = {};
   if (config.data) {
-    try {
-      body = typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
-    } catch {
-      body = {};
-    }
+    body = typeof config.data === 'string' ? safeJsonParse(config.data, {}) : config.data;
   }
 
   // 1a. Auth OTP Request: POST /api/auth/otp/request
@@ -289,12 +294,7 @@ const handleMockFallback = async (config) => {
     }
 
     if (method === 'put') {
-      let currentUser = null;
-      try {
-        currentUser = JSON.parse(localStorage.getItem('chatapp_user') || 'null');
-      } catch {
-        currentUser = null;
-      }
+      const currentUser = safeJsonParse(localStorage.getItem('chatapp_user'), null);
       return {
         status: 200,
         statusText: 'OK',
@@ -369,16 +369,15 @@ const handleMockFallback = async (config) => {
     const convId = Number(msgMatch[1]);
     const stored = sessionStorage.getItem(`syncpulse_msgs_${convId}`);
     if (stored) {
-      try {
+      const parsedData = safeJsonParse(stored, null);
+      if (parsedData) {
         return {
           status: 200,
           statusText: 'OK',
           headers: { 'content-type': 'application/json' },
           config,
-          data: JSON.parse(stored),
+          data: parsedData,
         };
-      } catch {
-        // proceed
       }
     }
     // No mock messages - return empty list for real empty conversations
@@ -394,12 +393,7 @@ const handleMockFallback = async (config) => {
   // 6. Send Message: POST /api/conversations/:id/messages
   if (msgMatch && method === 'post') {
     const convId = Number(msgMatch[1]);
-    let currentUser = null;
-    try {
-      currentUser = JSON.parse(localStorage.getItem('chatapp_user') || 'null');
-    } catch {
-      currentUser = null;
-    }
+    const currentUser = safeJsonParse(localStorage.getItem('chatapp_user'), null);
     const senderId = currentUser?.userId || 2;
     const senderUsername = currentUser?.username || 'Rishikesh';
 
@@ -413,7 +407,7 @@ const handleMockFallback = async (config) => {
       createdAt: new Date().toISOString(),
     };
 
-    const stored = JSON.parse(sessionStorage.getItem(`syncpulse_msgs_${convId}`) || '[]');
+    const stored = safeJsonParse(sessionStorage.getItem(`syncpulse_msgs_${convId}`), []);
     stored.push(newMsg);
     // Propagate storage failure if setItem fails
     sessionStorage.setItem(`syncpulse_msgs_${convId}`, JSON.stringify(stored));
@@ -485,13 +479,9 @@ const handleMockFallback = async (config) => {
     if (matchReg) {
       resolvedUsername = matchReg.username;
     } else {
-      try {
-        const curUser = JSON.parse(localStorage.getItem('chatapp_user') || 'null');
-        if (curUser && (curUser.id === userId || curUser.userId === userId)) {
-          resolvedUsername = curUser.username;
-        }
-      } catch {
-        // ignore
+      const curUser = safeJsonParse(localStorage.getItem('chatapp_user'), null);
+      if (curUser && (curUser.id === userId || curUser.userId === userId)) {
+        resolvedUsername = curUser.username;
       }
     }
 
@@ -519,16 +509,15 @@ const handleMockFallback = async (config) => {
     const convId = Number(convSingleMatch[1]);
     const storedConv = sessionStorage.getItem(`syncpulse_conv_${convId}`);
     if (storedConv) {
-      try {
+      const parsedConv = safeJsonParse(storedConv, null);
+      if (parsedConv) {
         return {
           status: 200,
           statusText: 'OK',
           headers: { 'content-type': 'application/json' },
           config,
-          data: JSON.parse(storedConv),
+          data: parsedConv,
         };
-      } catch {
-        // ignore
       }
     }
     const err = new Error('Conversation not found');

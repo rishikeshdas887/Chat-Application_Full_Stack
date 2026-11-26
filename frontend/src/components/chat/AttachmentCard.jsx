@@ -1,6 +1,20 @@
 import React from 'react';
 import { formatFileSize, getFileMetadata } from '../../constants/attachments';
 
+const isSafeAttachmentUrl = (url) => {
+  if (!url || typeof url !== 'string') return false;
+  const clean = url.trim();
+  if (clean.toLowerCase().startsWith('javascript:') || clean.toLowerCase().startsWith('data:text/html')) {
+    return false;
+  }
+  try {
+    const parsed = new URL(clean, typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:' || parsed.protocol === 'blob:' || clean.startsWith('data:');
+  } catch {
+    return clean.startsWith('data:');
+  }
+};
+
 const AttachmentCard = ({
   attachment,
   isOwn = false,
@@ -27,6 +41,7 @@ const AttachmentCard = ({
   const badgeColor = color || meta.color;
   const badgeCategory = category || meta.category;
   const downloadUrl = remoteUrl || dataUrl;
+  const safeDownloadUrl = isSafeAttachmentUrl(downloadUrl) ? downloadUrl : null;
 
   const handleDownloadClick = (e) => {
     if (onDownload) {
@@ -198,9 +213,9 @@ const AttachmentCard = ({
           >
             Retry
           </button>
-        ) : downloadUrl ? (
+        ) : safeDownloadUrl ? (
           <a
-            href={downloadUrl}
+            href={safeDownloadUrl}
             download={name}
             target="_blank"
             rel="noopener noreferrer"

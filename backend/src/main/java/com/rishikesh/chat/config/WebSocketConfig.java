@@ -24,7 +24,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("http://localhost:5173");
+                .setAllowedOriginPatterns(
+                    "http://localhost:5173",
+                    "http://localhost:3000",
+                    "https://chat-app-frontend-delta-blush-13.vercel.app",
+                    "https://*.vercel.app"
+                );
     }
 
     @Override
