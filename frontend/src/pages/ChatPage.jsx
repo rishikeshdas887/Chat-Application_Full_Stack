@@ -19,6 +19,8 @@ import ImageLightboxModal from '../components/chat/ImageLightboxModal';
 import useAiSummarizer from '../hooks/useAiSummarizer';
 import useFileSelector from '../hooks/useFileSelector';
 import { uploadAttachment } from '../services/fileUploadService';
+import SpotlightCard from '../components/ui/reactbits/SpotlightCard';
+import ShinyText from '../components/ui/reactbits/ShinyText';
 
 const normalizeMessage = (msg) => {
   return {
@@ -367,16 +369,18 @@ const ChatPage = () => {
                 overflowY: 'auto',
               }}
             >
-              <div
+              <SpotlightCard
+                spotlightColor="rgba(99, 102, 241, 0.22)"
+                intensity={0.8}
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                  backgroundColor: 'var(--bg-card, rgba(17, 24, 39, 0.85))',
                   backdropFilter: 'blur(20px) saturate(190%)',
                   WebkitBackdropFilter: 'blur(20px) saturate(190%)',
                   borderRadius: '24px',
                   padding: 'clamp(24px, 6vw, 48px) clamp(20px, 5vw, 40px)',
                   maxWidth: 'min(460px, 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.8)',
-                  boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9)',
+                  border: '1px solid var(--border-light, rgba(255, 255, 255, 0.1))',
+                  boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.35)',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -403,17 +407,17 @@ const ChatPage = () => {
                   style={{
                     fontSize: '22px',
                     fontWeight: 700,
-                    color: '#0f172a',
+                    color: 'var(--text-main, #f8fafc)',
                     letterSpacing: '-0.02em',
                     margin: '0 0 8px',
                   }}
                 >
-                  Start a Conversation
+                  <ShinyText text="Start a Conversation" color="var(--text-main, #f8fafc)" shineColor="#a5b4fc" speed={3} />
                 </h2>
                 <p
                   style={{
                     fontSize: '14px',
-                    color: '#64748b',
+                    color: 'var(--text-muted, #94a3b8)',
                     lineHeight: 1.6,
                     margin: '0 0 24px',
                   }}
@@ -453,7 +457,7 @@ const ChatPage = () => {
                     🔗 Open by ID
                   </button>
                 </div>
-              </div>
+              </SpotlightCard>
             </div>
           </div>
         ) : (

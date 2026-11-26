@@ -4,8 +4,9 @@ import { useAuth } from '../hooks/useAuth';
 import SignInMethodSelector from '../components/auth/SignInMethodSelector';
 import PhoneNumberForm from '../components/auth/PhoneNumberForm';
 import OtpVerificationStep from '../components/auth/OtpVerificationStep';
-
 import RegisterForm from '../components/auth/RegisterForm';
+import Aurora from '../components/ui/reactbits/Aurora';
+import ShinyText from '../components/ui/reactbits/ShinyText';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -200,6 +201,21 @@ const AuthPage = () => {
           zIndex: 0,
         }}
       >
+        {/* Background Aurora Ambient Shader (React Bits) */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            opacity: 0.45,
+          }}
+        >
+          <Aurora
+            colorStops={['#3b82f6', '#6366f1', '#8b5cf6']}
+            amplitude={1.1}
+            speed={0.5}
+            blend={0.5}
+          />
+        </div>
         <div
           style={{
             position: 'absolute',
@@ -279,9 +295,13 @@ const AuthPage = () => {
             </svg>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '18px', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.02em' }}>
-              SyncPulse
-            </span>
+            <ShinyText
+              text="SyncPulse"
+              color="#ffffff"
+              shineColor="#a5b4fc"
+              speed={3}
+              style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '-0.02em' }}
+            />
             <span
               style={{
                 fontSize: '10px',

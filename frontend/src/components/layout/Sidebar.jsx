@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import Avatar from '../ui/Avatar';
 import ConversationList from './ConversationList';
+import ShinyText from '../ui/reactbits/ShinyText';
 
 const Sidebar = ({
   user,
@@ -113,19 +114,17 @@ const Sidebar = ({
             >
               ⚡
             </div>
-            <span
+            <ShinyText
+              text="SyncPulse"
+              color="#f8fafc"
+              shineColor="#818cf8"
+              speed={3.5}
               style={{
                 fontSize: '16px',
                 fontWeight: 800,
-                color: '#f8fafc',
                 letterSpacing: '-0.02em',
-                background: 'linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
               }}
-            >
-              SyncPulse
-            </span>
+            />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

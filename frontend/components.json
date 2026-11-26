@@ -10,11 +10,11 @@
     "cssVariables": true
   },
   "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
+    "components": "./src/components/ui/reactbits",
+    "utils": "./src/lib/utils",
+    "ui": "./src/components/ui",
+    "lib": "./src/lib",
+    "hooks": "./src/hooks"
   },
   "registries": {
     "@react-bits": "https://reactbits.dev/r/{name}.json"

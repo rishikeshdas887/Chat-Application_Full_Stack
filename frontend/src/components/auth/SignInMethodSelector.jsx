@@ -1,4 +1,6 @@
 import React from 'react';
+import BlurText from '../ui/reactbits/BlurText';
+import ShinyText from '../ui/reactbits/ShinyText';
 
 const SignInMethodSelector = ({ onSelectMethod, onDirectEnter }) => {
   const [savedUser, setSavedUser] = React.useState(() => {
@@ -24,17 +26,22 @@ const SignInMethodSelector = ({ onSelectMethod, onDirectEnter }) => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
       <div style={{ textAlign: 'center' }}>
-        <h1
-          style={{
-            fontSize: '26px',
-            fontWeight: 800,
-            color: '#ffffff',
-            letterSpacing: '-0.025em',
-            margin: '0 0 8px 0',
-          }}
-        >
-          Welcome back
-        </h1>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}>
+          <BlurText
+            text="Welcome back"
+            delay={80}
+            animateBy="words"
+            direction="top"
+            style={{
+              fontSize: '26px',
+              fontWeight: 800,
+              color: '#ffffff',
+              letterSpacing: '-0.025em',
+              margin: 0,
+              justifyContent: 'center',
+            }}
+          />
+        </div>
         <p
           style={{
             fontSize: '14px',
@@ -125,7 +132,7 @@ const SignInMethodSelector = ({ onSelectMethod, onDirectEnter }) => {
                       color: '#c7d2fe',
                     }}
                   >
-                    1-Click Direct
+                    <ShinyText text="1-Click Direct" color="#c7d2fe" shineColor="#ffffff" speed={2.5} />
                   </span>
                   <button
                     type="button"

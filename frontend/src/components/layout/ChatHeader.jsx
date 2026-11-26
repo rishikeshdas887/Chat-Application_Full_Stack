@@ -3,6 +3,7 @@ import Avatar from '../ui/Avatar';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import useTheme from '../../hooks/useTheme';
+import ShinyText from '../ui/reactbits/ShinyText';
 
 const ChatHeader = ({
   conversation,
@@ -190,7 +191,14 @@ const ChatHeader = ({
           title="Toggle Privacy-First Local AI Summary"
         >
           <span>✨</span>
-          <span className="desktop-text">AI Summary</span>
+          <span className="desktop-text">
+            <ShinyText
+              text="AI Summary"
+              color={isAiSummaryOpen ? '#818cf8' : 'currentColor'}
+              shineColor="#ffffff"
+              speed={3}
+            />
+          </span>
           {isAiSummaryGenerating && (
             <span
               style={{
