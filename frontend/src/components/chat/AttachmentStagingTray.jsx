@@ -151,6 +151,9 @@ const AttachmentStagingTray = ({
                   fontSize: '12px',
                   cursor: 'pointer',
                   padding: 0,
+                  position: 'relative',
+                  zIndex: 10,
+                  flexShrink: 0,
                 }}
               >
                 ✕

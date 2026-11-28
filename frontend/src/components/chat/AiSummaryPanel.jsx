@@ -14,6 +14,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import Spinner from '../ui/Spinner';
+import SpotlightCard from '../ui/reactbits/SpotlightCard';
+import ShinyText from '../ui/reactbits/ShinyText';
 
 // Helper to format bold **text** and line breaks cleanly
 const renderFormattedText = (text) => {
@@ -607,14 +609,16 @@ const AiSummaryPanel = ({
             </div>
           ) : summary ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {/* 1. Consensus Conclusion of Decisions (PROMINENT) */}
-              <div
+              {/* 1. Consensus Conclusion of Decisions (PROMINENT SPOTLIGHT) */}
+              <SpotlightCard
+                spotlightColor="rgba(34, 197, 94, 0.22)"
+                intensity={0.65}
                 style={{
                   backgroundColor: '#f0fdf4',
                   borderRadius: '14px',
                   padding: '16px',
                   border: '1.5px solid #86efac',
-                  boxShadow: '0 2px 8px rgba(22, 163, 74, 0.08)',
+                  boxShadow: '0 4px 14px rgba(22, 163, 74, 0.1)',
                 }}
               >
                 <div
@@ -631,7 +635,7 @@ const AiSummaryPanel = ({
                   }}
                 >
                   <span>🎯</span>
-                  <span>Conclusion of Decisions</span>
+                  <ShinyText text="Conclusion of Decisions" color="#166534" shineColor="#22c55e" speed={3} />
                 </div>
                 <div
                   style={{
@@ -677,7 +681,7 @@ const AiSummaryPanel = ({
                     </div>
                   </div>
                 )}
-              </div>
+              </SpotlightCard>
 
               {/* 2. Overview */}
               <div

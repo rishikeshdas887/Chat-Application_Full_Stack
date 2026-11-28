@@ -265,7 +265,7 @@ const RegisterForm = ({ onSubmit, onDirectEnter, onBackToSignIn, isLoading, erro
                   const registered = JSON.parse(localStorage.getItem('syncpulse_registered_accounts') || '[]');
                   matched = registered.find((u) => u.phoneNumber === p);
                 } catch {}
-                const uname = matched?.username || username || (p.endsWith('6297799544') ? 'Rishikesh' : 'User');
+                const uname = matched?.username || username || 'User';
                 onDirectEnter?.({ username: uname, phoneNumber: p });
               }}
               style={{

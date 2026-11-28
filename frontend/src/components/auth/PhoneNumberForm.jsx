@@ -181,7 +181,7 @@ const PhoneNumberForm = ({ onRequestOtp, onDirectEnter, onBack, isLoading, error
             } catch {}
             if (!targetAccount) {
               const digits = clean.replace(/\D/g, '');
-              const uname = clean.endsWith('6297799544') ? 'Rishikesh' : `User_${digits.slice(-4)}`;
+              const uname = `User_${digits.slice(-4)}`;
               targetAccount = {
                 username: uname,
                 phoneNumber: clean,

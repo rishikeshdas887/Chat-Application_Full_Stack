@@ -92,7 +92,12 @@ const handleMockFallback = async (config) => {
 
   // 1a. Auth OTP Request: POST /api/auth/otp/request
   if (url.includes('/api/auth/otp/request') && method === 'post') {
-    const phone = (body.phoneNumber || '').trim() || '+916297799544';
+    const phone = (body.phoneNumber || '').trim();
+    if (!phone) {
+      const err = new Error('Phone number is required');
+      err.response = { status: 400, data: { error: 'Phone number is required' } };
+      throw err;
+    }
     sessionStorage.setItem('syncpulse_last_challenge_phone', phone);
     const challengeId = 'cloud-demo-ch-' + Date.now();
     let secret = '';
@@ -161,9 +166,6 @@ const handleMockFallback = async (config) => {
     if (existing && existing.username) {
       finalUsername = existing.username;
       finalUserId = existing.id || existing.userId || 5;
-    } else if (cleanPhone && cleanPhone.endsWith('6297799544')) {
-      finalUsername = 'Rishikesh';
-      finalUserId = 2;
     } else if (cleanPhone) {
       const digits = cleanPhone.replace(/\D/g, '');
       finalUsername = `User_${digits.length >= 4 ? digits.slice(-4) : digits}`;
@@ -211,9 +213,6 @@ const handleMockFallback = async (config) => {
     if (existing) {
       loginUsername = existing.username;
       loginUserId = existing.id || existing.userId || 5;
-    } else if (cleanPhone.endsWith('6297799544')) {
-      loginUsername = 'Rishikesh';
-      loginUserId = 2;
     } else {
       loginUsername = body.username || (cleanPhone ? `User_${cleanPhone.slice(-4)}` : 'SyncPulse User');
     }
@@ -238,7 +237,7 @@ const handleMockFallback = async (config) => {
   if (url.includes('/api/users') && method === 'post') {
     const cleanPhone = (body.phoneNumber || '').trim().replace(/[\s\-()]/g, '');
     const registered = getRegisteredAccounts();
-    const isDuplicate = registered.some((u) => u.phoneNumber === cleanPhone) || cleanPhone.endsWith('6297799544');
+    const isDuplicate = registered.some((u) => u.phoneNumber === cleanPhone);
 
     if (isDuplicate) {
       const err = new Error('Number Already Present in Database');
@@ -303,7 +302,7 @@ const handleMockFallback = async (config) => {
         data: {
           id: requestedId,
           username: body.username || currentUser?.username || 'User',
-          phoneNumber: currentUser?.phoneNumber || '+916297799544',
+          phoneNumber: currentUser?.phoneNumber || '',
         },
       };
     }
@@ -394,8 +393,8 @@ const handleMockFallback = async (config) => {
   if (msgMatch && method === 'post') {
     const convId = Number(msgMatch[1]);
     const currentUser = safeJsonParse(localStorage.getItem('chatapp_user'), null);
-    const senderId = currentUser?.userId || 2;
-    const senderUsername = currentUser?.username || 'Rishikesh';
+    const senderId = currentUser?.userId || currentUser?.id || 1;
+    const senderUsername = currentUser?.username || 'User';
 
     const newMsg = {
       id: Date.now(),
@@ -566,13 +565,18 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Fallback for static cloud hosting when external backend is not configured or returns 405
+    // Fallback for static cloud hosting or offline backend proxy (502/503/504)
     const isCloudStaticOr405 =
       error.response?.status === 405 ||
+      error.response?.status === 502 ||
+      error.response?.status === 503 ||
+      error.response?.status === 504 ||
+      error.code === 'ERR_NETWORK' ||
+      error.code === 'ECONNREFUSED' ||
       (error.response?.status === 404 && error.config?.url?.startsWith('/api/')) ||
       (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app'));
 
-    if (isCloudStaticOr405 || isExplicitDemoMode()) {
+    if (isCloudStaticOr405 || isExplicitDemoMode() || !error.response) {
       const fallback = await handleMockFallback(error.config);
       if (fallback) return Promise.resolve(fallback);
     }

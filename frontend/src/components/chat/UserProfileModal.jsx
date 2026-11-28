@@ -3,6 +3,7 @@ import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Avatar from '../ui/Avatar';
+import SpotlightCard from '../ui/reactbits/SpotlightCard';
 import { useAuth } from '../../hooks/useAuth';
 
 const UserProfileModal = ({ isOpen, onClose }) => {
@@ -66,8 +67,10 @@ const UserProfileModal = ({ isOpen, onClose }) => {
       maxWidth="460px"
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-        {/* User Identity Card */}
-        <div
+        {/* User Identity Card with Interactive Spotlight */}
+        <SpotlightCard
+          spotlightColor="rgba(99, 102, 241, 0.18)"
+          intensity={0.65}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -75,7 +78,8 @@ const UserProfileModal = ({ isOpen, onClose }) => {
             padding: '16px',
             backgroundColor: '#f8fafc',
             border: '1px solid #e2e8f0',
-            borderRadius: '12px',
+            borderRadius: '14px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.04)',
           }}
         >
           <Avatar name={user?.username || ''} size="lg" showPresence isOnline />
@@ -129,7 +133,7 @@ const UserProfileModal = ({ isOpen, onClose }) => {
               </span>
             </div>
           </div>
-        </div>
+        </SpotlightCard>
 
         {error && (
           <div

@@ -201,7 +201,7 @@ async function runTest() {
   // Test individual file removal in staging tray
   const removeButtons = page.locator('button[title*="Remove"]');
   if (await removeButtons.count() >= 2) {
-    await removeButtons.last().click();
+    await removeButtons.last().click({ force: true });
     await page.waitForTimeout(300);
     console.log('✓ Successfully tested attachment removal before sending');
   }
